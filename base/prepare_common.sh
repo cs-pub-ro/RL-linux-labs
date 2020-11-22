@@ -27,12 +27,12 @@ function lab_runTopology() {
 	# mkfifo "$PIPE"
 	# nohup python3 "$@" >"$LOG" 2>&1 <"$PIPE" &
 	nohup python3 "$@" &>"$LOG" &
-	tail -f "$LOG" &
+	tail -F "$LOG" &
 }
 
 function lab_cleanall() {
 	(
-		set -e  # ignore errors
+		set +e  # ignore errors
 		stop_lab  # make sure the topology is stopped
 
 		_debug "Clean ip_forward"
@@ -50,6 +50,6 @@ function lab_cleanall() {
 		@silent ip link set dev v00ff00 up
 		@silent ip link set dev veth-blue up
 		@silent ip link set dev v0000ff up
-	)
+	) || true
 }
 
