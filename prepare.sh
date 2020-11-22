@@ -6,7 +6,7 @@ export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 _RL_INTERNAL="rlrullz"
 
 function _help() {
-	echo "Syntax: $0 LAB_NAME [EXERCISE]"
+	echo "Syntax: $0 LAB_NAME [EXERCISE]" >&2
 	exit 1
 }
 

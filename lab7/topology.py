@@ -69,7 +69,7 @@ def rl_lab_network(remote_controller=""):
 
     info('*** Starting network\n')
     net.start()
-    info('*** Running CLI\n')
+    #info('*** Running CLI\n')
 
     #CLI(net)
     #info('*** Stopping network')
