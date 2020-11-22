@@ -22,14 +22,14 @@ fi
 		exit 0
 	fi
 
+	if [[ "$1" == "--force" ]]; then
+		git reset --hard
+	fi
 	if git merge-base --is-ancestor HEAD $remote_branch; then
 		echo 'Fast-forward possible. Merging...'
 		git merge --ff-only --stat $remote_branch
 	else
 		echo 'Fast-forward not possible. Rebasing...'
-		if [[ "$1" == "--force" ]]; then
-			git reset --hard
-		fi
 		git rebase --preserve-merges --stat $remote_branch
 	fi
 )
