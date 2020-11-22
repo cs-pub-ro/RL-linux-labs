@@ -30,6 +30,10 @@ function lab_runTopology() {
 	tail -F "$LOG" &
 }
 
+function check_container() {
+	[ "$( docker container inspect -f '{{.State.Running}}' "$1" 2>/dev/null )" == "true" ]
+}
+
 function lab_cleanall() {
 	(
 		set +e  # ignore errors
