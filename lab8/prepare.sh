@@ -57,29 +57,54 @@ function etc_hosts(){
         echo "For container $name third byte is $index"
 
         #read -r -d '' etc_hosts_var << EOF
-        etc_hosts_var=`cat << EOF
-127.0.0.1   localhost
-192.168.1.2 red
-192.168.2.2 green
-192.168.3.2 blue
-192.168.$index.1 host
+        etc_hosts_var=`cat <<-EOF
+	127.0.0.1   localhost
+	192.168.1.2 red
+	192.168.2.2 green
+	192.168.3.2 blue
+	192.168.$index.1 host
 
-# The following lines are desirable for IPv6 capable hosts
-::1     ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-EOF`
+	# The following lines are desirable for IPv6 capable hosts
+	::1     ip6-localhost ip6-loopback
+	fe00::0 ip6-localnet
+	ff00::0 ip6-mcastprefix
+	ff02::1 ip6-allnodes
+	ff02::2 ip6-allrouters
+	EOF`
 
 	docker exec mn.$name /bin/bash -c "echo \"$etc_hosts_var\" > /etc/hosts"
 
         ((index=index+1))
   done
 
+	cat > /etc/hosts <<-EOF 
+	127.0.0.1   localhost
+	192.168.1.2 red
+	192.168.2.2 green
+	192.168.3.2 blue
+	192.168.$index.1 host
+
+	# The following lines are desirable for IPv6 capable hosts
+	::1     ip6-localhost ip6-loopback
+	fe00::0 ip6-localnet
+	ff00::0 ip6-mcastprefix
+	ff02::1 ip6-allnodes
+	ff02::2 ip6-allrouters
+	EOF
+
+
+
+
+
+}
+
+function internet_connectivity(){
+	/sbin/sysctl -q -w net.ipv4.ip_forward=1
+	/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 }
 
 
 addressing
 nameservice
 etc_hosts
+internet_connectivity
