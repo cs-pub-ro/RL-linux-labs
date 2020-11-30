@@ -30,14 +30,15 @@ function addressing(){
 	docker exec mn.$name /bin/bash -c "ip address flush dev $name-eth0"
 	/bin/bash -c "ip address flush veth-$name"
 
+	# activating network interfaces 
+	docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 up"
+	/bin/bash -c "ip link set dev veth-$name up"
+
 	# establishig connectivity
 	docker exec mn.$name /bin/bash -c "ip address add 192.168.$index.2/24 dev $name-eth0"
 	docker exec mn.$name /bin/bash -c "ip route add default via 192.168.$index.1"
 	/bin/bash -c "ip address add 192.168.$index.1/24 dev veth-$name"
 
-	# activating network interfaces 
-	docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 up"
-	/bin/bash -c "ip link set dev veth-$name up"
 	((index=index+1))
   done
 }
