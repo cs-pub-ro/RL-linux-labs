@@ -123,9 +123,40 @@ function user_management(){
 	docker exec mn.blue /bin/bash -c "echo 'corina:student' | chpasswd"
 }
 
+function create_artefacts(){
+	
+	# Create large file in student@green'.
+	docker exec mn.green /bin/bash -c "/bin/dd if=/dev/urandom of=/home/student/file-100M.dat bs=1M count=100 > /dev/null 2>&1"
+	docker exec mn.green /bin/bash -c "/bin/chown student:student ~student/file-100M.dat > /dev/null 2>&1"
+
+	# Create 10M files in student@host
+	/bin/dd if=/dev/urandom of=/home/student/host-file-10M.dat bs=1M count=10 > /dev/null 2>&1
+	/bin/chown student:student /home/student/host-file-10M.dat
+	# Create 10M files in corina@blue
+	docker exec mn.blue /bin/bash -c "/bin/dd if=/dev/urandom of=/home/corina/blue-file-10M.dat bs=1M count=10 > /dev/null 2>&1"
+	docker exec mn.blue /bin/bash -c "/bin/chown corina:corina ~corina/blue-file-10M.dat"
+
+	# Create folders in student@host.
+	/bin/rm -fr /home/student/assignment
+	/bin/mkdir /home/student/assignment
+	echo "x - 1 = 0" > /home/student/assignment/linear.txt
+	echo "x^2 - 3x + 2 = 0" > /home/student/assignment/quadratic.txt
+	echo "x^3 - 6x^2 + 11x -6 = 0" > /home/student/assignment/cubic.txt
+	/bin/chown -R student:student /home/student/assignment
+	# Create folders in corina@blue.
+	docker exec mn.blue /bin/bash -c '/bin/rm -fr /home/corina/solution'
+	docker exec mn.blue /bin/bash -c '/bin/mkdir /home/corina/solution'
+	docker exec mn.blue /bin/bash -c '/echo "x = 1" > /home/corina/solution/linear.txt'
+	docker exec mn.blue /bin/bash -c '/echo "x1 = 1, x2 = 2" > /home/corina/solution/quadratic.txt'
+	docker exec mn.blue /bin/bash -c '/echo "x1 = 1, x2 = 2, x3 = 3" > /home/corina/solution/cubic.txt'
+	docker exec mn.blue /bin/bash -c '/bin/chown -R corina:corina ~corina/solution'
+
+}
+
 
 addressing
 nameservice
 etc_hosts
 internet_connectivity
 user_management
+create_artefacts
