@@ -146,9 +146,9 @@ function create_artefacts(){
 	# Create folders in corina@blue.
 	docker exec mn.blue /bin/bash -c '/bin/rm -fr /home/corina/solution'
 	docker exec mn.blue /bin/bash -c '/bin/mkdir /home/corina/solution'
-	docker exec mn.blue /bin/bash -c '/echo "x = 1" > /home/corina/solution/linear.txt'
-	docker exec mn.blue /bin/bash -c '/echo "x1 = 1, x2 = 2" > /home/corina/solution/quadratic.txt'
-	docker exec mn.blue /bin/bash -c '/echo "x1 = 1, x2 = 2, x3 = 3" > /home/corina/solution/cubic.txt'
+	docker exec mn.blue /bin/bash -c 'echo "x = 1" > /home/corina/solution/linear.txt'
+	docker exec mn.blue /bin/bash -c 'echo "x1 = 1, x2 = 2" > /home/corina/solution/quadratic.txt'
+	docker exec mn.blue /bin/bash -c 'echo "x1 = 1, x2 = 2, x3 = 3" > /home/corina/solution/cubic.txt'
 	docker exec mn.blue /bin/bash -c '/bin/chown -R corina:corina ~corina/solution'
 
 }
