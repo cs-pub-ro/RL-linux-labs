@@ -11,7 +11,8 @@ function smoke() {
 }
 
 function go() {
-	[ "$(docker ps | grep $1 )" ]  && docker exec -it mn.$1 /bin/bash -c "PWD=/root /bin/bash" 
+	#[ "$(docker ps | grep $1 )" ]  && docker exec -it mn.$1 /bin/bash -c "PWD=/root /bin/bash" 
+	[ "$(docker ps | grep $1 )" ]  && docker exec --user=student -it mn.$1 /bin/bash 
 }
 
 function rr() {
