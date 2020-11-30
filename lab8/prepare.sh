@@ -158,14 +158,11 @@ function share_ssh_keys(){
   > /tmp/authorized_keys_root
   > /tmp/authorized_keys_student
   for name in red green blue; do
-	echo "A"
-	docker exec mn.$name /bin/bash -c "/bin/su - student -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
-	echo "B"
-	docker exec mn.$name /bin/bash -c "/bin/su - root -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
 
-	echo "C"
+	docker exec -t --user student mn.$name /bin/bash -c "/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"
+	docker exec -t mn.$name /bin/bash -c "/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"
+
 	docker exec --user=student -t mn.$name /bin/bash -c "cat ~/.ssh/id_rsa.pub" >> /tmp/authorized_keys_student
-	echo "D"
 	docker exec -t mn.$name /bin/bash -c "cat ~/.ssh/id_rsa.pub" >> /tmp/authorized_keys_root
   done
 
