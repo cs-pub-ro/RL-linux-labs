@@ -21,7 +21,7 @@ EXPOSE 21/tcp
 # telnet
 EXPOSE 23/tcp
 
-USER student
+#USER student
 
 # CMD ["/bin/bash", "-c"]
 # ENTRYPOINT [ "echo", "in progress" ]
