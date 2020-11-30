@@ -67,6 +67,20 @@ def rl_lab_network(remote_controller=""):
     hostg.cmd(sshd_bash_cmd)
     hostb.cmd(sshd_bash_cmd)
 
+    info('*** Start vsftpd\n')
+    sshd_bash_cmd = '/bin/bash /usr/local/bin/vsftpd.sh'
+    hostr.cmd(sshd_bash_cmd)
+    hostg.cmd(sshd_bash_cmd)
+    hostb.cmd(sshd_bash_cmd)
+
+    info('*** Start telnetd\n')
+    sshd_bash_cmd = '/bin/bash /usr/local/bin/telnetd.sh'
+    hostr.cmd(sshd_bash_cmd)
+    hostg.cmd(sshd_bash_cmd)
+    hostb.cmd(sshd_bash_cmd)
+
+
+
     info('*** Starting network\n')
     net.start()
     #info('*** Running CLI\n')
