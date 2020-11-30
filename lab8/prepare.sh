@@ -114,7 +114,7 @@ function user_management(){
 	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
 	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/bogdan -s /bin/bash -l bogdan"
 	docker exec mn.blue /bin/bash -c "echo 'bogdan:student' | chpasswd"
-	docker exec mn.blue /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '\"\"' -f ~/.ssh/id_rsa'"
+	docker exec mn.blue /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
 
 	echo "Creating user corina on blue"
 	# create user corina on blue
