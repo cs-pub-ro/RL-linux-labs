@@ -56,7 +56,8 @@ function etc_hosts(){
   for name in red green blue; do
         echo "For container $name third byte is $index"
 
-        read -r -d '' etc_hosts_var << EOF
+        #read -r -d '' etc_hosts_var << EOF
+        etc_hosts_var=`cat << EOF
 127.0.0.1   localhost
 192.168.1.2 red
 192.168.2.2 green
@@ -69,9 +70,9 @@ fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
-EOF
+EOF`
 
-	docker exec mn.$name /bin/bash -c "echo $etc_hosts_var > /etc/hosts"
+	docker exec mn.$name /bin/bash -c "echo \"$etc_hosts_var\" > /etc/hosts"
 
         ((index=index+1))
   done
