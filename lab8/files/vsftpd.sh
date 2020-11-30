@@ -1,5 +1,5 @@
 #!/bin/bash
 
 
-service vsftp stop
-service vsftp start
+service vsftpd stop
+service vsftpd start
