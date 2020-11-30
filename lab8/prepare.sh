@@ -167,8 +167,8 @@ function share_ssh_keys(){
 
   for name in red green blue; do
 	docker cp /tmp/authorized_keys_root mn.$name:/root/.ssh/authorized_keys
-	docker cp /tmp/authorized_keys_root mn.$name:/home/student/.ssh/authorized_keys
-	docker exec mn.$name /bin/bash -c '/bin/chown -R student:student .ssh/authorized_keys'
+	docker cp /tmp/authorized_keys_student mn.$name:/home/student/.ssh/authorized_keys
+	docker exec mn.$name /bin/bash -c '/bin/chown -R student:student /home/student/.ssh/authorized_keys'
   done
   
   rm -f t/tmp/authorized_keys_*
