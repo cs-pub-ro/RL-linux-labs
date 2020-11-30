@@ -49,7 +49,7 @@ function nameservice(){
   done
 }
 
-function hosts(){
+function etc_hosts(){
 
   index=1;
   for name in red green blue; do
@@ -77,3 +77,7 @@ EOF
 
 }
 
+
+addressing
+nameservice
+etc_hosts
