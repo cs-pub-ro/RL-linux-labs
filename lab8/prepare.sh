@@ -102,7 +102,7 @@ function user_management(){
 
 	echo "Creating user ana on host"
 	# create user ana on host
-	/usr/sbin/userdel -r ana > /dev/null 2>&1
+	/usr/sbin/userdel -r ana || true  
 	/usr/sbin/useradd -m -d /home/ana -s /bin/bash -l ana
 	echo "ana:student" | chpasswd
 	/bin/mkdir -p /home/ana/.ssh
@@ -111,14 +111,14 @@ function user_management(){
 
 	echo "Creating user bogdan on blue"
 	# create user bogdan on blue
-	docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
+	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
 	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/bogdan -s /bin/bash -l bogdan"
 	docker exec mn.blue /bin/bash -c "echo 'bogdan:student' | chpasswd"
 	docker exec mn.blue /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '\"\"' -f ~/.ssh/id_rsa'"
 
 	echo "Creating user corina on blue"
 	# create user corina on blue
-	docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r corina > /dev/null 2>&1"
+	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r corina > /dev/null 2>&1"
 	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/corina -s /bin/bash -l corina"
 	docker exec mn.blue /bin/bash -c "echo 'corina:student' | chpasswd"
 }
