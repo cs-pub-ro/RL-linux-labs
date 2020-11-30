@@ -153,6 +153,27 @@ function create_artefacts(){
 
 }
 
+function share_ssh_keys(){
+
+  > /tmp/authorized_keys_root
+  > /tmp/authorized_keys_student
+  for name in red green blue; do
+	docker exec mn.$name /bin/bash -c "/bin/su - student -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
+	docker exec mn.$name /bin/bash -c "/bin/su - root -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
+
+	docker exec mn.$name /bin/bash -c "/bin/su - student -c 'cat ~/.ssh/id_rsa.pub'" >> /tmp/authorized_key_student
+	docker exec mn.$name /bin/bash -c "/bin/su - root -c 'cat ~/.ssh/id_rsa.pub'" >> /tmp/authorized_keys_root
+  done
+
+  for name in red green blue; do
+	docker cp /tmp/authorized_keys_root mn.$name:/root/.ssh/authorized_keys
+	docker cp /tmp/authorized_keys_root mn.$name:/home/student/.ssh/authorized_keys
+	docker exec mn.$name /bin/bash -c '/bin/chown -R student:student .ssh/authorized_keys'
+  done
+  
+  rm -f t/tmp/authorized_keys_*
+
+}
 
 addressing
 nameservice
@@ -160,3 +181,4 @@ etc_hosts
 internet_connectivity
 user_management
 create_artefacts
+share_ssh_keys
