@@ -91,16 +91,33 @@ function etc_hosts(){
 	ff02::1 ip6-allnodes
 	ff02::2 ip6-allrouters
 	EOF
-
-
-
-
-
 }
 
 function internet_connectivity(){
 	/sbin/sysctl -q -w net.ipv4.ip_forward=1
 	/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+}
+
+function user_management(){
+
+	# create user ana on host
+	/usr/sbin/userdel -r ana > /dev/null 2>&1
+	/usr/sbin/useradd -m -d /home/ana -s /bin/bash -l ana
+	echo "ana:student" | chpasswd
+	/bin/mkdir -p /home/ana/.ssh
+	/bin/chown -R ana:ana /home/ana/.ssh/
+	/bin/chmod 777 /home/ana/.ssh/
+
+	# create user bogdan on blue
+	docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
+	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/bogdan -s /bin/bash -l bogdan"
+	docker exec mn.blue /bin/bash -c "echo 'bogdan:student' | chpasswd"
+	docker exec mn.blue /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '\"\"' -f ~/.ssh/id_rsa'"
+
+	# create user corina on blue
+	docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r corina > /dev/null 2>&1"
+	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/corina -s /bin/bash -l corina"
+	docker exec mn.blue /bin/bash -c "echo 'corina:student' | chpasswd"
 }
 
 
