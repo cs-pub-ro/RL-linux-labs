@@ -17,7 +17,7 @@ while ! check_container "mn.blue"; do sleep 1; done
 sleep 2
 for name in red green blue; do
 	ip li set dev veth-$name down
-	docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 down"
+	docker exec mn.$name sudo /bin/bash -c "ip link set dev $name-eth0 down"
 done
 
 function addressing(){
@@ -27,16 +27,16 @@ function addressing(){
 	echo "For container $name third byte is $index"
 
 	# removing any residual IP v4 config
-	docker exec mn.$name /bin/bash -c "ip address flush dev $name-eth0"
+	docker exec mn.$name sudo /bin/bash -c "ip address flush dev $name-eth0"
 	/bin/bash -c "ip address flush veth-$name"
 
 	# activating network interfaces 
-	docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 up"
+	docker exec mn.$name sudo /bin/bash -c "ip link set dev $name-eth0 up"
 	/bin/bash -c "ip link set dev veth-$name up"
 
 	# establishig connectivity
-	docker exec mn.$name /bin/bash -c "ip address add 192.168.$index.2/24 dev $name-eth0"
-	docker exec mn.$name /bin/bash -c "ip route add default via 192.168.$index.1"
+	docker exec mn.$name sudo /bin/bash -c "ip address add 192.168.$index.2/24 dev $name-eth0"
+	docker exec mn.$name sudo /bin/bash -c "ip route add default via 192.168.$index.1"
 	/bin/bash -c "ip address add 192.168.$index.1/24 dev veth-$name"
 
 	((index=index+1))
@@ -46,7 +46,7 @@ function addressing(){
 function nameservice(){
 
   for name in red green blue; do
-	docker exec mn.$name /bin/bash -c "echo nameserver 8.8.8.8 >  /etc/resolv.conf"
+	docker exec mn.$name sudo /bin/bash -c "echo nameserver 8.8.8.8 >  /etc/resolv.conf"
   done
 }
 
@@ -72,7 +72,7 @@ function etc_hosts(){
 	ff02::2 ip6-allrouters
 	EOF`
 
-	docker exec mn.$name /bin/bash -c "echo \"$etc_hosts_var\" > /etc/hosts"
+	docker exec mn.$name sudo /bin/bash -c "echo \"$etc_hosts_var\" > /etc/hosts"
 
         ((index=index+1))
   done
@@ -111,16 +111,16 @@ function user_management(){
 
 	echo "Creating user bogdan on blue"
 	# create user bogdan on blue
-	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
-	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/bogdan -s /bin/bash -l bogdan"
-	docker exec mn.blue /bin/bash -c "echo 'bogdan:student' | chpasswd"
-	docker exec mn.blue /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
+	#docker exec mn.blue sudo /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
+	docker exec mn.blue sudo /bin/bash -c "/usr/sbin/useradd -m -d /home/bogdan -s /bin/bash -l bogdan"
+	docker exec mn.blue sudo /bin/bash -c "echo 'bogdan:student' | chpasswd"
+	docker exec mn.blue sudo /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
 
 	echo "Creating user corina on blue"
 	# create user corina on blue
-	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r corina > /dev/null 2>&1"
-	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/corina -s /bin/bash -l corina"
-	docker exec mn.blue /bin/bash -c "echo 'corina:student' | chpasswd"
+	#docker exec mn.blue sudo /bin/bash -c "/usr/sbin/userdel -r corina > /dev/null 2>&1"
+	docker exec mn.blue sudo /bin/bash -c "/usr/sbin/useradd -m -d /home/corina -s /bin/bash -l corina"
+	docker exec mn.blue sudo /bin/bash -c "echo 'corina:student' | chpasswd"
 }
 
 
