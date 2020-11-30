@@ -82,7 +82,7 @@ function etc_hosts(){
 	192.168.1.2 red
 	192.168.2.2 green
 	192.168.3.2 blue
-	192.168.$index.1 host
+	127.0.0.1   host
 
 	# The following lines are desirable for IPv6 capable hosts
 	::1     ip6-localhost ip6-loopback
