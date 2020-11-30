@@ -5,9 +5,8 @@ LABEL recommendedtag="rlrules/lab8:latest"
 
 # install necessary
 RUN apt-get update && apt-get install -y \
-		vsftpd apache2 telnet \
+		vsftpd apache2 telnet netcat\
 	&& rm -rf /var/lib/apt/lists/*
-
 # apache 
 EXPOSE 80/tcp
 EXPOSE 443/tcp

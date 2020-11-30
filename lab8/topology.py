@@ -26,7 +26,7 @@ def rl_lab_network(remote_controller=""):
     net.addController(c)
 
     info('*** Adding virtual hosts\n')
-    docker_img = 'rlrules/base:latest'
+    docker_img = 'rlrules/lab8:latest'
     network_mode = 'none'
 
     root = Host( 'root', inNamespace=False )
