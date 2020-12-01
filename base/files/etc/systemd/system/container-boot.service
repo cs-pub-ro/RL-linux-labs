@@ -1,0 +1,12 @@
+[Unit]
+Description=Boot-time container script
+DefaultDependencies=no
+Before=
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/container-boot.sh
+
+[Install]
+WantedBy=sysinit.target
+

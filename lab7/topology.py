@@ -32,15 +32,18 @@ def rl_lab_network(remote_controller=""):
     root = Host( 'root', inNamespace=False )
 
     hostr = net.addDocker(
-        'red', dimage=docker_img, ip='', network_mode=network_mode, 
+        'red', dimage=docker_img, dcmd="/lib/systemd/systemd",
+        ip='', network_mode=network_mode, 
         hostname='red', volumes=["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         environment={"RL_PS1_FORMAT": "\\e[0;31m\\u@\\h:\\W\\$ \\e[m"})
     hostg = net.addDocker(
-        'green', dimage=docker_img, ip='', network_mode=network_mode, 
+        'green', dimage=docker_img, dcmd="/lib/systemd/systemd",
+        ip='', network_mode=network_mode, 
         hostname='green', volumes=["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         environment={"RL_PS1_FORMAT": "\\e[0;32m\\u@\\h:\\W\\$ \\e[m"})
     hostb = net.addDocker(
-        'blue', dimage=docker_img, ip='', network_mode=network_mode, 
+        'blue',  dimage=docker_img, dcmd="/lib/systemd/systemd",
+        ip='', network_mode=network_mode, 
         hostname='blue', volumes=["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         environment={"RL_PS1_FORMAT": "\\e[0;34m\\u@\\h:\\W\\$ \\e[m"})
 

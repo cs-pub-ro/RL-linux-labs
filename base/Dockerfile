@@ -29,18 +29,8 @@ RUN find /etc/systemd/system \
 	systemctl set-default multi-user.target
 
 # create users and generate passwords
-RUN useradd -m student && \
-	/bin/bash -c 'echo student:student | chpasswd' && \
-	/bin/bash -c 'echo root:student | chpasswd' && \
-	usermod --shell /bin/bash student && \
-	usermod --shell /bin/bash root && \
-	usermod -aG sudo student && \
-	systemctl enable ssh && \
-	systemctl enable vsftpd && \
-	systemctl enable openbsd-inetd
-
-COPY files/bin/* /usr/local/bin/
-COPY files/etc/* /etc/
+COPY files/bin/ /usr/local/bin/
+COPY files/etc/ /etc/
 RUN chmod +x /usr/local/bin/*.sh && /usr/local/bin/prepare-image.sh
 
 CMD ["/lib/systemd/systemd"]

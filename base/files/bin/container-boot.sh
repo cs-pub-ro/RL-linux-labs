@@ -1,0 +1,5 @@
+#!/bin/bash
+# Runs at container boot time
+
+sysctl -w net.ipv6.conf.all.disable_ipv6=0
+
