@@ -33,15 +33,15 @@ def rl_lab_network(remote_controller=""):
 
     hostr = net.addDocker(
         'red', dimage=docker_img, ip='', network_mode=network_mode, 
-        hostname='red', 
+        hostname='red', volumes=["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         environment={"RL_PS1_FORMAT": "\\e[0;31m\\u@\\h:\\W\\$ \\e[m"})
     hostg = net.addDocker(
         'green', dimage=docker_img, ip='', network_mode=network_mode, 
-        hostname='green',
+        hostname='green', volumes=["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         environment={"RL_PS1_FORMAT": "\\e[0;32m\\u@\\h:\\W\\$ \\e[m"})
     hostb = net.addDocker(
         'blue', dimage=docker_img, ip='', network_mode=network_mode, 
-        hostname='blue',
+        hostname='blue', volumes=["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         environment={"RL_PS1_FORMAT": "\\e[0;34m\\u@\\h:\\W\\$ \\e[m"})
 
     info('*** Connecting hardware interfaces\n')
@@ -49,23 +49,7 @@ def rl_lab_network(remote_controller=""):
     Link(root, hostg, intfName1="veth-green", intfName2="green-eth0")
     Link(root, hostb, intfName1="veth-blue", intfName2="blue-eth0")
 
-    info('*** Enable IPv6 on virtual hosts\n')
-    ipv6_sysctl_cmd = 'sysctl -w net.ipv6.conf.all.disable_ipv6=0'
-    hostr.cmd(ipv6_sysctl_cmd)
-    hostg.cmd(ipv6_sysctl_cmd)
-    hostb.cmd(ipv6_sysctl_cmd)
-
-    info('*** Set PS1\n')
-    set_ps1_cmd = '/bin/bash /usr/local/bin/setprompt.sh'
-    hostr.cmd(set_ps1_cmd)
-    hostg.cmd(set_ps1_cmd)
-    hostb.cmd(set_ps1_cmd)
-
-    info('*** Start sshd\n')
-    sshd_bash_cmd = '/bin/bash /usr/local/bin/startsshd.sh'
-    hostr.cmd(sshd_bash_cmd)
-    hostg.cmd(sshd_bash_cmd)
-    hostb.cmd(sshd_bash_cmd)
+    # ipv6_sysctl_cmd = 'sysctl -w net.ipv6.conf.all.disable_ipv6=0'
 
     info('*** Starting network\n')
     net.start()

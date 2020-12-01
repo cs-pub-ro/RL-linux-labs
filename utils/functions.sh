@@ -27,7 +27,7 @@ function start_lab() {
 }
 
 function force_stop_lab() {
-	sudo mn -c
+	sudo mn -c -v output
 }
 
 function stop_lab() {

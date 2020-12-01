@@ -5,4 +5,5 @@ if [ ! -z "$RL_PS1_FORMAT" ]; then
     echo "export PS1=\"${RL_PS1_FORMAT}\"" >> /home/student/.bashrc
 fi
 
-exit 0
+rm -f "${BASH_SOURCE[0]}"
+
