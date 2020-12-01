@@ -23,7 +23,8 @@ EXPOSE 21/tcp
 EXPOSE 23/tcp
 
 #USER student
-
+#CMD ["/sbin/init"]
+CMD ["/bin/systemd"]
 # CMD ["/bin/bash", "-c"]
 # ENTRYPOINT [ "echo", "in progress" ]
 
