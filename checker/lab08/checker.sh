@@ -62,13 +62,40 @@ function helper_list_known_hosts(){
      fi
 
      if [ $1 == "host" ]; then
-	/bin/bash -c "cat /home/student/.ssh/known_hosts | cut -d ' ' -f 2- | sort -u"
+	/bin/bash -c "cat /home/student/.ssh/known_hosts 2> /dev/null| cut -d ' ' -f 2- | sort -u"
      else
-     	docker exec -t --user=student mn.$1 /bin/bash -c "cat /home/student/.ssh/known_hosts | cut -d ' ' -f 2- | sort -u"
+     	docker exec -t --user=student mn.$1 /bin/bash -c "cat /home/student/.ssh/known_hosts 2> /dev/null| cut -d ' ' -f 2- | sort -u"
      fi
  
      return 0
 }
+
+function helper_list_authorized_keys(){
+
+     # ERR code:
+     # 1 - number of params must be 2
+     # 2 - source host not available
+
+     if [ "$#" -ne 1 ]; then
+    	echo "Illegal number of parameters"
+	return 1
+     fi
+
+     if  ! helper_valid_host $1 ; then 
+	 echo "$1 not found"
+	 return 2
+     fi
+
+     if [ $1 == "host" ]; then
+	/bin/bash -c "cat /home/student/.ssh/authorized_keys 2> /dev/null | cut -d ' ' -f 2 | sort -u"
+     else
+     	docker exec -t --user=student mn.$1 /bin/bash -c "cat /home/student/.ssh/authorized_keys 2> /dev/null | cut -d ' ' -f 2 | sort -u"
+     fi
+ 
+     return 0
+}
+
+
 
 function checker_ex1(){
 
@@ -77,11 +104,31 @@ function checker_ex1(){
         return $?
 }
 
+function checker_ex2(){
 
-echo  -n "EX01 ####################################################### ";
-if checker_ex1; then
-        echo True;
-else
-        echo False;
-fi
+	# check if id_rsa and id_rsa pub exists corina blue
+     	id_rsa_exists=`docker exec -t --user=corina mn.blue /bin/bash -c "test -f ~/.ssh/id_rsa && test -f ~/.ssh/id_rsa.pub && echo true"`
+	if [ -z id_rsa_exists ]; then return 1; fi
+
+	# compare corina@blue id_rsa.pub with authorized_keys from student@host
+        corina_id_rsa_pub=$(docker exec -t --user=corina mn.blue /bin/bash -c "cat ~/.ssh/id_rsa.pub 2> /dev/null | cut -d ' ' -f 2 | tr -dc '[:print:]'")
+        helper_list_authorized_keys host | grep -q "$corina_id_rsa_pub"
+        return $?
+}
+
+
+
+function main(){
+	declare -a checker_modules=("checker_ex1" "checker_ex2")
+	for val in ${checker_modules[@]}; do
+		echo  -n "$val ####################################################### ";
+		if $val; then
+        		echo True;
+		else
+        		echo False;
+		fi
+	done
+
+}
+main
 
