@@ -111,15 +111,27 @@ function checker_ex2(){
 	if [ -z id_rsa_exists ]; then return 1; fi
 
 	# compare corina@blue id_rsa.pub with authorized_keys from student@host
+	# docker adds DOS chars, therefore it requires a dos2unix or sed -e "s/\r//g or tr -dc [':print:]. The latter removes all hidden characters"
         corina_id_rsa_pub=$(docker exec -t --user=corina mn.blue /bin/bash -c "cat ~/.ssh/id_rsa.pub 2> /dev/null | cut -d ' ' -f 2 | tr -dc '[:print:]'")
         helper_list_authorized_keys host | grep -q "$corina_id_rsa_pub"
         return $?
 }
 
+function checker_ex3(){
+	
+	# docker adds DOS chars, therefore it requires a dos2unix or sed -e "s/\r//g"
+	if ! docker exec -t --user=corina mn.blue /bin/bash -c "test -d ~/assignment/"; then return 1; fi
+	diff \
+		<(md5sum /home/student/assignment/*|cut -d ' ' -f 1) \
+		<(docker exec -t --user=corina mn.blue /bin/bash -c "md5sum ~/assignment/*| cut -d ' ' -f 1"| sed -e "s/\r//g") \
+		2>&1> /dev/null
+	return $?
+}
+
 
 
 function main(){
-	declare -a checker_modules=("checker_ex1" "checker_ex2")
+	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
