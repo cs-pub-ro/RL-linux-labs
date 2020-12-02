@@ -137,11 +137,23 @@ function checker_ex3(){
 	return 0
 }
 
+function checker_ex4(){
+
+	# lazy validation
+	test \
+		-f /home/student/file-100M-nc.dat && test \
+		-f /home/student/file-100M-ftp.dat && test \
+		-f /home/student/file-100M-ssh.dat
+	return $?
+
+	#TODO md5 / size 
+}
+
 
 
 function main(){
 	#todo investigate err: failed to resize tty, using default size
-	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3")
+	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3" "checker_ex4")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
