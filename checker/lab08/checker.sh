@@ -149,11 +149,42 @@ function checker_ex4(){
 	#TODO md5 / size 
 }
 
+function checker_ex6(){
+
+    # testing only ftp connectivity from blue
+    if docker exec -t --user=student mn.blue bash -c "nc -z -w1 green 21"; then
+	 return 1
+    fi
+
+    return 0
+}
+
+function checker_ex7(){
+
+    # testing only ssh connectivity from blue
+    if docker exec -t --user=student mn.blue bash -c "nc -z -w1 green 22"; then
+	 return 1
+    fi
+
+    return 0
+}
+
+function checker_ex8(){
+
+    # testing only ssh connectivity from red
+    if docker exec -t --user=student mn.red bash -c "nc -z -w1 green 22"; then
+	 return 0
+    fi
+
+    return 1
+}
+
 
 
 function main(){
 	#todo investigate err: failed to resize tty, using default size
-	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3" "checker_ex4")
+	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3" "checker_ex4" \
+		"checker_ex6" "checker_ex7" "checker_ex8")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
