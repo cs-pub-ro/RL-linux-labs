@@ -107,7 +107,7 @@ function user_management(){
 	echo "ana:student" | chpasswd
 	/bin/mkdir -p /home/ana/.ssh
 	/bin/chown -R ana:ana /home/ana/.ssh/
-	/bin/chmod 777 /home/ana/.ssh/
+	#/bin/chmod 777 /home/ana/.ssh/ # this debugging exercise has been deleted, but it can be utilized for ex 12 demo, for extra debugging
 
 	echo "Creating user bogdan on blue"
 	# create user bogdan on blue
@@ -150,6 +150,15 @@ function create_artefacts(){
 	docker exec mn.blue /bin/bash -c 'echo "x1 = 1, x2 = 2" > /home/corina/solution/quadratic.txt'
 	docker exec mn.blue /bin/bash -c 'echo "x1 = 1, x2 = 2, x3 = 3" > /home/corina/solution/cubic.txt'
 	docker exec mn.blue /bin/bash -c '/bin/chown -R corina:corina ~corina/solution'
+
+    	# Ana proiecte
+        /bin/rm -fr /home/ana/proiecte
+        /bin/mkdir /home/ana/proiecte
+        echo "ana" > /home/ana/proiecte/ana.txt
+        echo "are" > /home/ana/proiecte/are.txt
+        echo "mere" > /home/ana/proiecte/mere.txt
+        /bin/chown -R ana:ana /home/ana/proiecte
+
 
 }
 
