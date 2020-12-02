@@ -76,7 +76,7 @@ function helper_list_authorized_keys(){
      # 1 - number of params must be 2
      # 2 - source host not available
 
-     if [ "$#" -ne 1 ]; then
+     if [ "$#" -ne 2 ]; then
     	echo "Illegal number of parameters"
 	return 1
      fi
@@ -86,10 +86,12 @@ function helper_list_authorized_keys(){
 	 return 2
      fi
 
+     #TODO check user
+
      if [ $1 == "host" ]; then
-	/bin/bash -c "cat /home/student/.ssh/authorized_keys 2> /dev/null | cut -d ' ' -f 2 | sort -u"
+	/bin/bash -c "cat /home/$2/.ssh/authorized_keys 2> /dev/null | cut -d ' ' -f 2 | sort -u"
      else
-     	docker exec -t --user=student mn.$1 /bin/bash -c "cat /home/student/.ssh/authorized_keys 2> /dev/null | cut -d ' ' -f 2 | sort -u"
+     	docker exec -t --user=$2 mn.$1 /bin/bash -c "cat /home/$2/.ssh/authorized_keys 2> /dev/null | cut -d ' ' -f 2 | sort -u"
      fi
  
      return 0
@@ -113,7 +115,7 @@ function checker_ex2(){
 	# compare corina@blue id_rsa.pub with authorized_keys from student@host
 	# docker adds DOS chars, therefore it requires a dos2unix or sed -e "s/\r//g or tr -dc [':print:]. The latter removes all hidden characters"
         corina_id_rsa_pub=$(docker exec -t --user=corina mn.blue /bin/bash -c "cat ~/.ssh/id_rsa.pub 2> /dev/null | cut -d ' ' -f 2 | tr -dc '[:print:]'")
-        helper_list_authorized_keys host | grep -q "$corina_id_rsa_pub"
+        helper_list_authorized_keys host student | grep -q "$corina_id_rsa_pub"
         return $?
 }
 
@@ -197,10 +199,34 @@ function checker_ex11(){
     return 1
 }
 
+function checker_ex12(){
+	
+	# docker adds DOS chars, therefore it requires a dos2unix or sed -e "s/\r//g"
+	if ! docker exec -t --user=bogdan mn.blue /bin/bash -c "test -d ~/proiecte/"; then return 1; fi
+
+	diff \
+		<(md5sum /home/ana/proiecte/* 2> /dev/null|cut -d ' ' -f 1) \
+		<(docker exec -t --user=bogdan mn.blue /bin/bash -c "md5sum ~/proiecte/*| cut -d ' ' -f 1"| sed -e "s/\r//g") \
+		2>&1> /dev/null
+	[ $? -ne 0 ] && return 2
+
+	# check if id_rsa and id_rsa pub exists bogdan blue
+     	id_rsa_exists=`docker exec -t --user=corina mn.blue /bin/bash -c "test -f ~/.ssh/id_rsa && test -f ~/.ssh/id_rsa.pub && echo true"`
+	if [ -z id_rsa_exists ]; then return 3; fi
+
+	# compare bogdan@blue id_rsa.pub with authorized_keys from ana@host
+	# docker adds DOS chars, therefore it requires a dos2unix or sed -e "s/\r//g or tr -dc [':print:]. The latter removes all hidden characters"
+        bogdan_id_rsa_pub=$(docker exec -t --user=bogdan mn.blue /bin/bash -c "cat ~/.ssh/id_rsa.pub 2> /dev/null | cut -d ' ' -f 2 | tr -dc '[:print:]'")
+        helper_list_authorized_keys host ana | grep -q "$bogdan_id_rsa_pub"
+	[ $? -ne 0 ] && return 4 
+
+	return 0
+}
+
 function main(){
 	#todo investigate err: failed to resize tty, using default size
 	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3" "checker_ex4" \
-		"checker_ex6" "checker_ex7" "checker_ex8" "checker_ex11")
+		"checker_ex6" "checker_ex7" "checker_ex8" "checker_ex11" "checker_ex12")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
