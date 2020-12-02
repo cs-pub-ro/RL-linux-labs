@@ -21,12 +21,10 @@ function @silent() {
 }
 
 function lab_runTopology() {
-	local PIPE="/tmp/.containernet-stdin"
 	local LOG="/tmp/.containernet-stdout"
-	rm -f "$PIPE" "$LOG"
-	# mkfifo "$PIPE"
-	# nohup python3 "$@" >"$LOG" 2>&1 <"$PIPE" &
-	nohup python3 "$@" &>"$LOG" &
+	rm -f "$LOG"
+	PYTHONPATH="$SRC/base/python/" nohup \
+		python3 "$@" &>"$LOG" &
 	tail -F "$LOG" &
 }
 
