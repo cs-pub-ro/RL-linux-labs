@@ -121,16 +121,26 @@ function checker_ex3(){
 	
 	# docker adds DOS chars, therefore it requires a dos2unix or sed -e "s/\r//g"
 	if ! docker exec -t --user=corina mn.blue /bin/bash -c "test -d ~/assignment/"; then return 1; fi
+	if ! test -d /home/student/solution; then return 2; fi
+
 	diff \
-		<(md5sum /home/student/assignment/*|cut -d ' ' -f 1) \
+		<(md5sum /home/student/assignment/* 2> /dev/null|cut -d ' ' -f 1) \
 		<(docker exec -t --user=corina mn.blue /bin/bash -c "md5sum ~/assignment/*| cut -d ' ' -f 1"| sed -e "s/\r//g") \
 		2>&1> /dev/null
-	return $?
+	[ $? -ne 0 ] && return 3
+
+	diff \
+		<(md5sum /home/student/solution/* 2> /dev/null|cut -d ' ' -f 1) \
+		<(docker exec -t --user=corina mn.blue /bin/bash -c "md5sum ~/solution/*| cut -d ' ' -f 1"| sed -e "s/\r//g") \
+		2>&1> /dev/null
+	[ $? -ne 0 ] && return 4
+	return 0
 }
 
 
 
 function main(){
+	#todo investigate err: failed to resize tty, using default size
 	declare -a checker_modules=("checker_ex1" "checker_ex2" "checker_ex3")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
