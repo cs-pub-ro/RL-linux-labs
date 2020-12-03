@@ -30,11 +30,26 @@ function checker_ex5(){
 	return 1
 	
 }
+function checker_ex6(){
+	
+	# docker output has DOS hidden chars
+	remote_hostname=`docker exec -t --user=student mn.red /bin/bash \
+		-c "ssh -p 20022 -o StrictHostKeyChecking=no host -C 'hostname' 2> /dev/null"| tr -dc '[:print:]'`
+	if [ ! "$remote_hostname" == "green" ]; then return 1; fi
+
+	remote_hostname=`docker exec -t --user=student mn.red /bin/bash \
+		-c "ssh -p 30022 -o StrictHostKeyChecking=no host -C 'hostname' 2> /dev/null"| tr -dc '[:print:]'`
+	if [ ! "$remote_hostname" == "blue" ]; then return 1; fi
+
+	# in order to work, we have to avoid adding -i eth0 as it is currently described in teacher's log
+	return 0
+	
+}
 
 function main(){
 	#todo investigate err: failed to resize tty, using default size
 	declare -a checker_modules=("checker_ex1" "checker_ex4" "checker_ex5"\
-		)
+		"checker_ex6")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
