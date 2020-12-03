@@ -112,11 +112,26 @@ function checker_ex8(){
 
 }
 
+function checker_ex9(){
+
+	grep -v '^#' /etc/sysctl.conf | grep -qi "ip_forward" 
+	if [ $? -ne 0 ]; then return 1; fi
+
+	[ ! -f /etc/iptables-rules ] && return 2
+
+	grep -i "iface eth0" -A 1 /etc/network/interfaces | grep -qi "iptables-restore"
+	if [ $? -ne 0 ]; then return 3; fi
+
+	return 0
+
+}
+
+# ex10 manual
 
 function main(){
 	#todo investigate err: failed to resize tty, using default size
 	declare -a checker_modules=("checker_ex1" "checker_ex4" "checker_ex5"\
-		"checker_ex6" "checker_ex8")
+		"checker_ex6" "checker_ex8" "checker_ex9")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
