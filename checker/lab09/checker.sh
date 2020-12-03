@@ -21,9 +21,19 @@ function checker_ex4(){
 	return $?
 }
 
+function checker_ex5(){
+	
+	# docker output has DOS hidden chars
+	remote_hostname=`docker exec -t --user=student mn.green /bin/bash \
+		-c "ssh -p 10022 -o StrictHostKeyChecking=no host -C 'hostname' 2> /dev/null"| tr -dc '[:print:]'`
+	if [ "$remote_hostname" == "red" ]; then return 0; fi
+	return 1
+	
+}
+
 function main(){
 	#todo investigate err: failed to resize tty, using default size
-	declare -a checker_modules=("checker_ex1" "checker_ex4" \
+	declare -a checker_modules=("checker_ex1" "checker_ex4" "checker_ex5"\
 		)
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
