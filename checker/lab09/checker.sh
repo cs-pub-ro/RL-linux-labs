@@ -128,10 +128,37 @@ function checker_ex9(){
 
 # ex10 manual
 
+function checker_ex11(){
+
+	rm -rf /tmp/checker_ex11_lab09*
+
+	eth0_ip_addr=`ip a s eth0 | egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1`
+
+	(nohup timeout 20 tcpdump -vvv -n -i any ip dst host ocw.cs.pub.ro and tcp dst port 80 2> /dev/null > /tmp/checker_ex11_lab09 &)
+	
+
+	for h in red green blue; do
+	   docker exec -t --user=root mn.$h /bin/bash -c "wget -qO- ocw.cs.pub.ro 2>&1 --timeout 1 > /dev/null"
+	   sleep 1
+	done
+
+	sleep 25
+	cat /tmp/checker_ex11_lab09 | egrep -o "${eth0_ip_addr}\.[0-9]{1,5}" | cut -d '.' -f 5 | sort -u > /tmp/checker_ex11_lab09_cut
+
+	sleep 1
+	red_port=$(cat /tmp/checker_ex11_lab09_cut | sed '1q;d') 
+	green_port=$(cat /tmp/checker_ex11_lab09_cut | sed '3q;d')
+	blue_port=$(cat /tmp/checker_ex11_lab09_cut | sed '5q;d')
+	( [ -z $red_port ] || [ $red_port -lt 45000 ] || [ $red_port -gt 50000 ] ) && return 1 
+	( [ -z $green_port ] || [ $green_port -lt 50000 ] || [ $green_port -gt 55000 ] ) && return 2 
+	( [ -z $blue_port ] || [ $blue_port -lt 55000 ] || [ $blue_port -gt 60000 ] ) && return 3
+	return 0	
+}
+
 function main(){
 	#todo investigate err: failed to resize tty, using default size
 	declare -a checker_modules=("checker_ex1" "checker_ex4" "checker_ex5"\
-		"checker_ex6" "checker_ex8" "checker_ex9")
+		"checker_ex6" "checker_ex8" "checker_ex9" "checker_ex11")
 	for val in ${checker_modules[@]}; do
 		echo  -n "$val ####################################################### ";
 		if $val; then
