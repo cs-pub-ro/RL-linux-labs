@@ -1,0 +1,3 @@
+# keep some docker-defined environment when sudoing
+Defaults env_keep += "RL_PS1_FORMAT"
+

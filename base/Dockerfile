@@ -12,11 +12,17 @@ EXPOSE 22/tcp
 
 # install necessary packages
 RUN apt-get update && apt-get install -y \
-	sudo vim dbus nano curl wget neovim bash-completion \
+	sudo locales vim dbus nano curl wget neovim bash-completion \
 	systemd ifupdown ssh telnet rsync ftp \
 	net-tools iputils-ping iproute2 traceroute tcpdump dsniff \
 	dnsutils netcat vsftpd apache2 telnetd \
 	&& rm -rf /var/lib/apt/lists/*
+
+# Set the locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Systemd: disable optional services
 RUN find /etc/systemd/system \
