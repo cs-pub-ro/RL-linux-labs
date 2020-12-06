@@ -21,10 +21,9 @@ for name in red green blue; do
 done
 
 function addressing(){
-
   index=1;
   for name in red green blue; do
-	echo "For container $name third byte is $index"
+	@silent echo "For container $name third byte is $index"
 
 	# removing any residual IP v4 config
 	docker exec mn.$name /bin/bash -c "ip address flush dev $name-eth0"
@@ -54,8 +53,6 @@ function etc_hosts(){
 
   index=1;
   for name in red green blue; do
-        echo "For container $name third byte is $index"
-
         #read -r -d '' etc_hosts_var << EOF
         etc_hosts_var=`cat <<-EOF
 	127.0.0.1   localhost
@@ -100,23 +97,23 @@ function internet_connectivity(){
 
 function user_management(){
 
-	echo "Creating user ana on host"
+	@silent echo "Creating user ana on host"
 	# create user ana on host
-	/usr/sbin/userdel -r ana || true  
+	/usr/sbin/userdel -r ana &>/dev/null || true  
 	/usr/sbin/useradd -m -d /home/ana -s /bin/bash -l ana
 	echo "ana:student" | chpasswd
 	/bin/mkdir -p /home/ana/.ssh
 	/bin/chown -R ana:ana /home/ana/.ssh/
 	#/bin/chmod 777 /home/ana/.ssh/ # this debugging exercise has been deleted, but it can be utilized for ex 12 demo, for extra debugging
 
-	echo "Creating user bogdan on blue"
+	@silent echo "Creating user bogdan on blue"
 	# create user bogdan on blue
 	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r bogdan > /dev/null 2>&1"
 	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/bogdan -s /bin/bash -l bogdan"
 	docker exec mn.blue /bin/bash -c "echo 'bogdan:student' | chpasswd"
 	docker exec mn.blue /bin/bash -c "bin/su - bogdan -c '/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N \"\" -f ~/.ssh/id_rsa'"
 
-	echo "Creating user corina on blue"
+	@silent echo "Creating user corina on blue"
 	# create user corina on blue
 	#docker exec mn.blue /bin/bash -c "/usr/sbin/userdel -r corina > /dev/null 2>&1"
 	docker exec mn.blue /bin/bash -c "/usr/sbin/useradd -m -d /home/corina -s /bin/bash -l corina"

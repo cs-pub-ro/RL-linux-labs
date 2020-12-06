@@ -17,7 +17,7 @@ def lab8_main(options=None):
     link_host_container(hroot, hblue)
 
     net.start()
-    
+
 
 if __name__ == '__main__':
     entrypoint(lab8_main)

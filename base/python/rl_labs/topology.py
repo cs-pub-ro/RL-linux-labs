@@ -2,14 +2,14 @@
 Base RL Lab topology definitions.
 """
 
+import argparse
+import sys
+
 from mininet.net import Containernet
 from mininet.node import Controller, RemoteController, OVSSwitch, Host
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 from mininet.link import Intf, Link
-
-import argparse
-import sys
 
 
 def get_controller(remote_controller=""):
@@ -75,8 +75,7 @@ def link_host_container(host, container):
 
 
 def entrypoint(main_func):
-    setLogLevel( 'info' )
-
+    setLogLevel('output')
     parser = argparse.ArgumentParser(description='Running modes')
     parser.add_argument('--remote-controller', action="store", dest="remote_controller", default='')
     params = parser.parse_args(sys.argv[1:])
