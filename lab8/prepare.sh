@@ -177,6 +177,10 @@ function share_ssh_keys(){
 	docker cp /tmp/authorized_keys_student mn.$name:/home/student/.ssh/authorized_keys
 	docker exec mn.$name /bin/bash -c '/bin/chown -R student:student /home/student/.ssh/authorized_keys'
   done
+	su student -c 'mkdir -p /home/student/.ssh'
+	docker exec mn.red /bin/bash -c 'cat /home/student/.ssh/id_rsa.pub' > /home/student/.ssh/authorized_keys
+	chown student:student /home/student/.ssh -R
+	chmod 700 /home/student/.ssh -R
   
   rm -f t/tmp/authorized_keys_*
 
