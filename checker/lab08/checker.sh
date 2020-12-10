@@ -145,7 +145,7 @@ function checker_ex4(){
 	test \
 		-f /home/student/file-100M-nc.dat && test \
 		-f /home/student/file-100M-ftp.dat && test \
-		-f /home/student/file-100M-ssh.dat
+		-f /home/student/file-100M-scp.dat
 	return $?
 
 	#TODO md5 / size 
