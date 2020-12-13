@@ -8,13 +8,8 @@ fi
 
 lab_cleanall
 
-echo "Starting ContainerNet..."
 lab_runTopology "$LAB_SRC/topology.py"
 
-while ! check_container "mn.red"; do sleep 1; done 
-while ! check_container "mn.green"; do sleep 1; done 
-while ! check_container "mn.blue"; do sleep 1; done 
-sleep 2
 for name in red green blue; do
 	ip li set dev veth-$name down
 	docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 down"

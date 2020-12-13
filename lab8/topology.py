@@ -1,6 +1,7 @@
 from mininet.node import Host
 from rl_labs.topology import (
-    get_default_net, standard_container, entrypoint, link_host_container
+    get_default_net, standard_container, entrypoint, link_host_container,
+    signal_topology_started
 )
 
 
@@ -17,6 +18,7 @@ def lab8_main(options=None):
     link_host_container(hroot, hblue)
 
     net.start()
+    signal_topology_started()
 
 
 if __name__ == '__main__':
