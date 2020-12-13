@@ -36,7 +36,7 @@ function lab_runTopology() {
 	local TAIL_PID=$!
 	# wait for the topology to init
 	echo "Wait for containernet to start..."
-	local SLEEP_DELAYS=(2 3 4 4 4 4)  # times out after this
+	local SLEEP_DELAYS=(2 3 4 6 8 10 10 10 10 10 10)  # times out after this
 	local I=0
 	while [[ ! -f "$GUARD_FILE" ]]; do
 		if [[ -z "${SLEEP_DELAYS[$I]}" ]]; then echo "FATAL: Operation timed out!"; return 1; fi
