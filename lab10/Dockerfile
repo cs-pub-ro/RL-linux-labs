@@ -1,0 +1,5 @@
+ROM rlrules/base:latest
+
+LABEL maintainer="RLTeam@UPB"
+LABEL recommendedtag="rlrules/lab10:latest"
+
