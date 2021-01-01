@@ -12,6 +12,9 @@ from mininet.log import setLogLevel, info
 from mininet.link import Intf, Link
 
 
+GUARD_FILE = "/tmp/.containernet-init"
+
+
 def get_controller(remote_controller=""):
     if not remote_controller:
         return Controller(name='c0', port=6633)
@@ -72,6 +75,12 @@ def link_host_container(host, container):
     intfName1 = "veth-" + container.name
     intfName2 = container.name + "-eth0"
     return Link(host, container, intfName1=intfName1, intfName2=intfName2)
+
+
+def signal_topology_started():
+    """ Writes the guard file to signal that the topoloy has been set up. """
+    with open(GUARD_FILE, "w") as f:
+        f.write("Containernet started!")
 
 
 def entrypoint(main_func):

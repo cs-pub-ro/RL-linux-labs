@@ -15,6 +15,7 @@ useradd -m student
 usermod --shell /bin/bash student
 usermod --shell /bin/bash root
 usermod -aG sudo student
+echo "student ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/student
 
 # customize user bashrc
 echo "export PS1=\"\${RL_PS1_FORMAT}\"" >> /root/.bashrc

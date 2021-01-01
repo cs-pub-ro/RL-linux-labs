@@ -145,7 +145,7 @@ function checker_ex4(){
 	test \
 		-f /home/student/file-100M-nc.dat && test \
 		-f /home/student/file-100M-ftp.dat && test \
-		-f /home/student/file-100M-ssh.dat
+		-f /home/student/file-100M-scp.dat
 	return $?
 
 	#TODO md5 / size 
@@ -211,7 +211,7 @@ function checker_ex12(){
 	[ $? -ne 0 ] && return 2
 
 	# check if id_rsa and id_rsa pub exists bogdan blue
-     	id_rsa_exists=`docker exec -t --user=corina mn.blue /bin/bash -c "test -f ~/.ssh/id_rsa && test -f ~/.ssh/id_rsa.pub && echo true"`
+     	id_rsa_exists=`docker exec -t --user=bogdan mn.blue /bin/bash -c "test -f ~/.ssh/id_rsa && test -f ~/.ssh/id_rsa.pub && echo true"`
 	if [ -z id_rsa_exists ]; then return 3; fi
 
 	# compare bogdan@blue id_rsa.pub with authorized_keys from ana@host

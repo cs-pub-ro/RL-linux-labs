@@ -22,10 +22,29 @@ function @silent() {
 
 function lab_runTopology() {
 	local LOG="/tmp/.containernet-stdout"
-	rm -f "$LOG"
-	PYTHONPATH="$SRC/base/python/" nohup \
-		python3 "$@" &>"$LOG" &
-	tail -F "$LOG" &
+	local GUARD_FILE="/tmp/.containernet-init"
+	local SCRIPT_PID=$$
+	rm -f "$LOG" "$GUARD_FILE"
+	(
+		PYTHONPATH="$SRC/base/python/" nohup \
+			python3 "$@" &>"$LOG"
+	)&
+	(
+		touch "$LOG"
+		tail -q -f --pid "$SCRIPT_PID" "$LOG"
+	)&
+	local TAIL_PID=$!
+	# wait for the topology to init
+	echo "Wait for containernet to start..."
+	local SLEEP_DELAYS=(2 3 4 6 8 10 10 10 10 10 10)  # times out after this
+	local I=0
+	while [[ ! -f "$GUARD_FILE" ]]; do
+		if [[ -z "${SLEEP_DELAYS[$I]}" ]]; then echo "FATAL: Operation timed out!"; return 1; fi
+		sleep "${SLEEP_DELAYS[$I]}"
+		I="$(( "$I" + 1 ))"
+		echo "Still waiting..."
+	done
+	echo "Containernet successfully started!"
 }
 
 function check_container() {

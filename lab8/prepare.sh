@@ -8,13 +8,8 @@ fi
 
 lab_cleanall
 
-echo "Starting ContainerNet..."
 lab_runTopology "$LAB_SRC/topology.py"
 
-while ! check_container "mn.red"; do sleep 1; done 
-while ! check_container "mn.green"; do sleep 1; done 
-while ! check_container "mn.blue"; do sleep 1; done 
-sleep 2
 for name in red green blue; do
 	ip li set dev veth-$name down
 	docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 down"
@@ -177,6 +172,10 @@ function share_ssh_keys(){
 	docker cp /tmp/authorized_keys_student mn.$name:/home/student/.ssh/authorized_keys
 	docker exec mn.$name /bin/bash -c '/bin/chown -R student:student /home/student/.ssh/authorized_keys'
   done
+	su student -c 'mkdir -p /home/student/.ssh'
+	docker exec mn.red /bin/bash -c 'cat /home/student/.ssh/id_rsa.pub' > /home/student/.ssh/authorized_keys
+	chown student:student /home/student/.ssh -R
+	chmod 700 /home/student/.ssh -R
   
   rm -f t/tmp/authorized_keys_*
 
