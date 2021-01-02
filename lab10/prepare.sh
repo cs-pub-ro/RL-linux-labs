@@ -124,32 +124,32 @@ function create_artefacts(){
 	configure_apache
 	
 	# http server home page
-	docker exec mn.red /bin/bash -c "echo '<h1>Laborator 10 - pe red</h1>' > /var/www/index.html"
+	docker exec mn.red /bin/bash -c "echo '<h1>Laborator 10 - pe red</h1>' > /var/www/html/index.html"
 	# http? artefact
-	docker exec mn.red /bin/bash -c "/bin/dd if=/dev/urandom of=/var/www/file.dat bs=1K count=1 > /dev/null 2>&1"
+	docker exec mn.red /bin/bash -c "/bin/dd if=/dev/urandom of=/var/www/html/file.dat bs=1K count=1 > /dev/null 2>&1"
 
 	# ftp files hierarchy
 	# TODO: to bring these specs to the current century 
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/mobile/Google/Nexus4/"
-	docker exec mn.red /bin/bash -c "echo '1.512 GHz quad-core Krait' > /var/www/folder/mobile/Google/Nexus4/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/mobile/Google/Nexus7/"
-	docker exec mn.red /bin/bash -c "echo 'ARM Cortex-A9 Nvidia Tegra 3 T30L 1.2 GHz quad-core (1.3 GHz single-core mode) 1MB L2 cache' > /var/www/folder/mobile/Google/Nexus7/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/mobile/Apple/iPhone5S/"
-	docker exec mn.red /bin/bash -c "echo '1.3 GHz dual-core Apple-designed ARMv8-A 64-bit Apple A7 with M7 motion coprocessor' > /var/www/folder/mobile/Apple/iPhone5S/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/mobile/Apple/iPadAir/"
-	docker exec mn.red /bin/bash -c "echo '1.4 GHz dual-core Apple Cyclone' > /var/www/folder/mobile/Apple/iPadAir/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/embedded/Qualcomm/Scorpion/"
-	docker exec mn.red /bin/bash -c "echo 'Single or dual-core configuration; 2.1 DMIPS/MHz' > /var/www/folder/embedded/Qualcomm/Scorpion/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/embedded/Qualcomm/Krait/"
-	docker exec mn.red /bin/bash -c "echo 'Dual or quad-core configurations; 3.3 DMIPS/Mhz' > /var/www/folder/embedded/Qualcomm/Krait/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/embedded/TI/OMAP3/"
-	docker exec mn.red /bin/bash -c "echo 'i1.2 GHz ARM Cortex-A8' > /var/www/folder/embedded/TI/OMAP3/info.txt"
-	docker exec mn.red /bin/bash -c "mkdir -p /var/www/folder/embedded/TI/OMAP4/"
-	docker exec mn.red /bin/bash -c "echo '1.3-1.5 GHz dual-core ARM Cortex-A9' > /var/www/folder/embedded/TI/OMAP4/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/mobile/Google/Nexus4/"
+	docker exec mn.red /bin/bash -c "echo '1.512 GHz quad-core Krait' > /var/www/html/folder/mobile/Google/Nexus4/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/mobile/Google/Nexus7/"
+	docker exec mn.red /bin/bash -c "echo 'ARM Cortex-A9 Nvidia Tegra 3 T30L 1.2 GHz quad-core (1.3 GHz single-core mode) 1MB L2 cache' > /var/www/html/folder/mobile/Google/Nexus7/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/mobile/Apple/iPhone5S/"
+	docker exec mn.red /bin/bash -c "echo '1.3 GHz dual-core Apple-designed ARMv8-A 64-bit Apple A7 with M7 motion coprocessor' > /var/www/html/folder/mobile/Apple/iPhone5S/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/mobile/Apple/iPadAir/"
+	docker exec mn.red /bin/bash -c "echo '1.4 GHz dual-core Apple Cyclone' > /var/www/html/folder/mobile/Apple/iPadAir/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/embedded/Qualcomm/Scorpion/"
+	docker exec mn.red /bin/bash -c "echo 'Single or dual-core configuration; 2.1 DMIPS/MHz' > /var/www/html/folder/embedded/Qualcomm/Scorpion/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/embedded/Qualcomm/Krait/"
+	docker exec mn.red /bin/bash -c "echo 'Dual or quad-core configurations; 3.3 DMIPS/Mhz' > /var/www/html/folder/embedded/Qualcomm/Krait/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/embedded/TI/OMAP3/"
+	docker exec mn.red /bin/bash -c "echo 'i1.2 GHz ARM Cortex-A8' > /var/www/html/folder/embedded/TI/OMAP3/info.txt"
+	docker exec mn.red /bin/bash -c "mkdir -p /var/www/html/folder/embedded/TI/OMAP4/"
+	docker exec mn.red /bin/bash -c "echo '1.3-1.5 GHz dual-core ARM Cortex-A9' > /var/www/html/folder/embedded/TI/OMAP4/info.txt"
 
 
 	# content for URL with special chars
-	docker exec mn.red /bin/bash -c 'cat > /var/www/login.php <<-END
+	docker exec mn.red /bin/bash -c 'cat > /var/www/html/login.php <<-END
 	<html>
 	<body>
 
