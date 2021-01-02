@@ -170,8 +170,8 @@ function create_artefacts(){
 	docker exec mn.red /bin/bash -c "/bin/chown ana:ana /home/ana/ana-ftp-file-5M.dat"
 
 	# content for FTP upload
-	/bin/dd if=/dev/urandom of=/home/bogdan/bogdan-ftp-file-3M.dat bs=1M count=3 > /dev/null 2>&1
-	/bin/chown bogdan:bogdan /home/bogdan/bogdan-ftp-file-3M.dat
+	/bin/dd if=/dev/urandom of=/home/bogdan/bogdan-ftp-data-3M.dat bs=1M count=3 > /dev/null 2>&1
+	/bin/chown bogdan:bogdan /home/bogdan/bogdan-ftp-data-3M.dat
 
 }
 
