@@ -116,6 +116,9 @@ function configure_apache(){
 	docker exec mn.red /bin/bash -c "a2ensite default-ssl > /dev/null 2>&1"
 	docker exec mn.red /bin/bash -c "service apache2 restart > /dev/null 2>&1"
 
+	apt update && apt install -y libapache2-mod-php7.2 
+	a2enmod php7.2
+	service apache2 restart
 	
 }
 
@@ -149,7 +152,7 @@ function create_artefacts(){
 
 
 	# content for URL with special chars
-	docker exec mn.red /bin/bash -c 'cat > /var/www/html/login.php <<-END
+	cat > /var/www/html/login.php <<-END
 	<html>
 	<body>
 
@@ -157,7 +160,7 @@ function create_artefacts(){
 	Your email address is: <?php echo \$_GET["email"]; ?>
 	</body>
 	</html>
-	END'
+	END
 
 	# content for FTP download
 	docker exec mn.red /bin/bash -c "mkdir -p /srv/ftp/download"
