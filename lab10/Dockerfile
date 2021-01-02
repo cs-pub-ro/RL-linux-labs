@@ -1,4 +1,4 @@
-ROM rlrules/base:latest
+FROM rlrules/base:latest
 
 LABEL maintainer="RLTeam@UPB"
 LABEL recommendedtag="rlrules/lab10:latest"

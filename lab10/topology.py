@@ -5,7 +5,7 @@ from rl_labs.topology import (
 )
 
 
-def lab9_main(options=None):
+def lab10_main(options=None):
     net = get_default_net(options)
 
     hroot = Host('host', inNamespace=False)
@@ -22,5 +22,5 @@ def lab9_main(options=None):
 
 
 if __name__ == '__main__':
-    entrypoint(lab9_main)
+    entrypoint(lab10_main)
 
