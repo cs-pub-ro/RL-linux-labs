@@ -115,7 +115,9 @@ function ex12(){
 
 		docker exec mn.$name /bin/bash -c "ip address add 192.168.$index.2/16 dev $name-eth0"
 		docker exec mn.$name /bin/bash -c "ip route add default via 192.168.10.1"
-		docker exec mn.$name /bin/bash -c "sed 's/192.168.*.1/192.168.10.1/g' -i /etc/hosts"
+		# -i not working - device busy
+		docker exec mn.$name /bin/bash -c "sed 's/192.168.*.1/192.168.10.1/g' /etc/hosts > /tmp/hosts"
+		#docker exec mn.$name /bin/bash -c "mv /tmp/hosts /etc/hosts"
 
 		((index=index+1))
   	done
@@ -132,13 +134,12 @@ function ex12(){
 
 }
 
-if [[ "$EX" == "ex12" ]]; then
-	ex12
-
-fi
 
 addressing
 nameservice
 etc_hosts
 internet_connectivity
 tools_management
+if [[ "$EX" == "ex12" ]]; then
+	ex12
+fi
