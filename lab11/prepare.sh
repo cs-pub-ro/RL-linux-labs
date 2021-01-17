@@ -128,7 +128,7 @@ function ex12(){
 	ip link set veth-green master midm-bridge
 	ip link set veth-blue master midm-bridge
 
-	ip address add 192.168.10.1/16 dev midm-bridge"
+	ip address add 192.168.10.1/16 dev midm-bridge
 
 }
 
