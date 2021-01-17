@@ -126,6 +126,7 @@ function ex12(){
 	ip link add name midm-bridge type bridge
 	ip link set midm-bridge up	
 
+	sleep 2
 	ip link set veth-red master midm-bridge
 	ip link set veth-green master midm-bridge
 	ip link set veth-blue master midm-bridge
@@ -139,7 +140,9 @@ addressing
 nameservice
 etc_hosts
 internet_connectivity
-tools_management
 if [[ "$EX" == "ex12" ]]; then
 	ex12
+else
+	tools_management
 fi
+
