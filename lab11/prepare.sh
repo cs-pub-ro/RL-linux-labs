@@ -92,13 +92,13 @@ function internet_connectivity(){
 
 function tools_management(){
 
-	apt update && apt install -y elinks whois nmap
+	apt update && apt install -y elinks whois nmap && true
 
-	docker exec mn.red /bin/bash -c "apt update && apt install -y apache2"
-	docker exec mn.red /bin/bash -c "service apache2 start"
+	docker exec mn.red /bin/bash -c "apt update && apt install -y apache2 && true"
+	docker exec mn.red /bin/bash -c "service apache2 restart"
 
-	docker exec mn.green /bin/bash -c "apt update && apt install -y python3 python3-pip"
-	docker exec mn.green /bin/bash -c "pip3 install slowloris"
+	docker exec mn.green /bin/bash -c "apt update && apt install -y python3 python3-pip && true"
+	docker exec mn.green /bin/bash -c "pip3 install slowloris && true"
 	
 }
 
@@ -141,3 +141,4 @@ addressing
 nameservice
 etc_hosts
 internet_connectivity
+tools_management
