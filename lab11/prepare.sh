@@ -133,6 +133,12 @@ function ex12(){
 
 	ip address add 192.168.0.100/22 dev midm-bridge
 
+
+	# package management
+	docker exec mn.red /bin/bash -c "apt update && apt install -y apache2 && true"
+	docker exec mn.red /bin/bash -c "service apache2 restart"
+	docker exec mn.green /bin/bash -c "apt update && apt install -y elinks && true"
+
 }
 
 
