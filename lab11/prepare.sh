@@ -113,10 +113,10 @@ function ex12(){
 		docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 up"
 		/bin/bash -c "ip link set dev veth-$name up"
 
-		docker exec mn.$name /bin/bash -c "ip address add 192.168.$index.2/16 dev $name-eth0"
-		docker exec mn.$name /bin/bash -c "ip route add default via 192.168.10.1"
+		docker exec mn.$name /bin/bash -c "ip address add 192.168.$index.2/22 dev $name-eth0"
+		docker exec mn.$name /bin/bash -c "ip route add default via 192.168.0.100"
 		# -i not working - device busy
-		docker exec mn.$name /bin/bash -c "sed 's/192.168.*.1/192.168.10.1/g' /etc/hosts > /tmp/hosts"
+		docker exec mn.$name /bin/bash -c "sed 's/192.168.*.1/192.168.0.100/g' /etc/hosts > /tmp/hosts"
 		#docker exec mn.$name /bin/bash -c "mv /tmp/hosts /etc/hosts"
 
 		((index=index+1))
@@ -131,7 +131,7 @@ function ex12(){
 	ip link set veth-green master midm-bridge
 	ip link set veth-blue master midm-bridge
 
-	ip address add 192.168.10.1/16 dev midm-bridge
+	ip address add 192.168.0.100/22 dev midm-bridge
 
 }
 
