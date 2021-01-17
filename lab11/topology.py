@@ -9,9 +9,9 @@ def lab11_main(options=None):
     net = get_default_net(options)
 
     hroot = Host('host', inNamespace=False)
-    hred = standard_container(net, "red")
-    hgreen = standard_container(net, "green")
-    hblue = standard_container(net, "blue")
+    hred = standard_container(net, "red", {"cap_add":["CAP_NET_RAW"]})
+    hgreen = standard_container(net, "green", {"cap_add":["CAP_NET_RAW"]})
+    hblue = standard_container(net, "blue", {"cap_add":["CAP_NET_RAW"]})
 
     link_host_container(hroot, hred)
     link_host_container(hroot, hgreen)

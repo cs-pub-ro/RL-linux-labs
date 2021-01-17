@@ -103,7 +103,33 @@ function tools_management(){
 }
 
 function ex12(){
-	
+
+  	index=1;
+  	for name in red green blue; do
+
+		docker exec mn.$name /bin/bash -c "ip address flush dev $name-eth0"
+		/bin/bash -c "ip address flush veth-$name"
+
+		docker exec mn.$name /bin/bash -c "ip link set dev $name-eth0 up"
+		/bin/bash -c "ip link set dev veth-$name up"
+
+		docker exec mn.$name /bin/bash -c "ip address add 192.168.$index.2/16 dev $name-eth0"
+		docker exec mn.$name /bin/bash -c "ip route add default via 192.168.10.1"
+		docker exec mn.$name /bin/bash -c "sed 's/192.168.*.1/192.168.10.1/g' -i /etc/hosts"
+
+		((index=index+1))
+  	done
+
+	# local network topology
+	ip link add name midm-bridge type bridge
+	ip link set midm-bridge up	
+
+	ip link set veth-red master midm-bridge
+	ip link set veth-green master midm-bridge
+	ip link set veth-blue master midm-bridge
+
+	ip address add 192.168.10.1/16 dev midm-bridge"
+
 }
 
 if [[ "$EX" == "ex12" ]]; then
