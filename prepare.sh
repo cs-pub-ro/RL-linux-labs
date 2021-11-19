@@ -6,7 +6,9 @@ export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 _RL_INTERNAL="rlrullz"
 
 function _help() {
-	echo "Syntax: $0 LAB_NAME [EXERCISE]" >&2
+	echo "Syntax: $0 LAB [EXERCISE]" >&2
+	echo "  > LAB: 'lab<X>', prefix required! e.g. lab7" >&2
+	echo "  > EXERCISE: 'ex<Y>', prefix required! e.g. ex1" >&2
 	exit 1
 }
 
