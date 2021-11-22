@@ -3,7 +3,7 @@
 
 if [[ "$_RL_INTERNAL" != "rlrullz" ]]; then
 	echo "ERROR: This script is not runnable!" >&2
-	exit
+	exit 1
 fi
 
 . "$SRC/utils/functions.sh"
@@ -72,5 +72,24 @@ function lab_cleanall() {
 		@silent ip link set dev veth-blue up
 		@silent ip link set dev v0000ff up
 	) || true
+}
+
+# generates /etc/hosts contents for a given host, optionally with extra lines
+function lab_gen_etc_hosts() {
+	local HOST_SELF="$1"; shift
+	local HOSTS_EXTRA=""
+	for host_line in "$@"; do
+		HOSTS_EXTRA+="$host_line"$'\n'
+	done
+	cat <<- EOF
+	127.0.0.1   localhost ${HOST_SELF}
+	${HOSTS_EXTRA}
+	# The following lines are desirable for IPv6 capable hosts
+	::1     ip6-localhost ip6-loopback
+	fe00::0 ip6-localnet
+	ff00::0 ip6-mcastprefix
+	ff02::1 ip6-allnodes
+	ff02::2 ip6-allrouters
+	EOF
 }
 
