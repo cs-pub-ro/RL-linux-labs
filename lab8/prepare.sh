@@ -156,28 +156,27 @@ function create_artefacts(){
 
 function share_ssh_keys(){
 
-  > /tmp/authorized_keys_root
-  > /tmp/authorized_keys_student
-  for name in red green blue; do
+	> /tmp/authorized_keys_root
+	> /tmp/authorized_keys_student
+	for name in red green blue; do
+		docker exec -t --user student mn.$name /bin/bash -c "/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"
+		docker exec -t mn.$name /bin/bash -c "/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"
 
-	docker exec -t --user student mn.$name /bin/bash -c "/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"
-	docker exec -t mn.$name /bin/bash -c "/bin/mkdir ~/.ssh; /usr/bin/ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"
+		docker exec --user=student -t mn.$name /bin/bash -c "cat ~/.ssh/id_rsa.pub" >> /tmp/authorized_keys_student
+		docker exec -t mn.$name /bin/bash -c "cat ~/.ssh/id_rsa.pub" >> /tmp/authorized_keys_root
+	done
 
-	docker exec --user=student -t mn.$name /bin/bash -c "cat ~/.ssh/id_rsa.pub" >> /tmp/authorized_keys_student
-	docker exec -t mn.$name /bin/bash -c "cat ~/.ssh/id_rsa.pub" >> /tmp/authorized_keys_root
-  done
-
-  for name in red green blue; do
-	docker cp /tmp/authorized_keys_root mn.$name:/root/.ssh/authorized_keys
-	docker cp /tmp/authorized_keys_student mn.$name:/home/student/.ssh/authorized_keys
-	docker exec mn.$name /bin/bash -c '/bin/chown -R student:student /home/student/.ssh/authorized_keys'
-  done
 	su student -c 'mkdir -p /home/student/.ssh'
-	docker exec mn.red /bin/bash -c 'cat /home/student/.ssh/id_rsa.pub' >> /home/student/.ssh/authorized_keys
+	for name in red green blue; do
+		docker cp /tmp/authorized_keys_root mn.$name:/root/.ssh/authorized_keys
+		docker cp /tmp/authorized_keys_student mn.$name:/home/student/.ssh/authorized_keys
+		docker exec mn.$name /bin/bash -c '/bin/chown -R student:student /home/student/.ssh/authorized_keys'
+		docker exec mn.$name /bin/bash -c 'cat /home/student/.ssh/id_rsa.pub' >> /home/student/.ssh/authorized_keys
+	done
 	chown student:student /home/student/.ssh -R
 	chmod 700 /home/student/.ssh -R
-  
-  rm -f t/tmp/authorized_keys_*
+
+	rm -f t/tmp/authorized_keys_*
 
 }
 
