@@ -46,9 +46,11 @@ def standard_container(net, name, options=None):
         "ip": '', "network_mode": 'none',
         # mount cgroup for systemd
         "volumes": ["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
+        "tmpfs": {"/tmp": "", "/run": "", "/run/lock": ""},
         "sysctls": {
             "net.ipv6.conf.all.disable_ipv6": "0"
-        }
+        },
+        "cap_add": ["sys_admin"],
     }
     CONTAINER_OPTIONS = {
         "red": {
