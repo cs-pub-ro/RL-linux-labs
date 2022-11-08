@@ -23,6 +23,10 @@ function rr() {
 }
 
 function start_lab() {
+	if [[ -f "${RL_LABS_HOME}/.update-required" ]]; then
+		echo "Please run 'update_lab' first!" >&2
+		return 1
+	fi
 	sudo "${RL_LABS_HOME}/prepare.sh" "$@"
 }
 

@@ -6,7 +6,7 @@ if [[ "$_RL_INTERNAL" != "rlrullz" ]]; then
 	exit
 fi
 
-BUILD_MODULES=(base lab7 lab8 lab9 lab10)
+BUILD_MODULES=(base lab7 lab8 lab9 lab10 lab11)
 for module in "${BUILD_MODULES[@]}"; do
 	# build docker images
 	cd "$SRC/$module/"

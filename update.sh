@@ -41,5 +41,7 @@ fi
 	. "$SRC/_post-update.sh"
 )
 
+rm -f "${SRC}/.update-required"
+
 echo "Lab scripts updated successfully!"
 
