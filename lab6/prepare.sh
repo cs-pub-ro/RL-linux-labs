@@ -8,6 +8,7 @@ fi
 # remove Docker's NO IP overrides (used for containernet only)
 cat << EOF > /etc/docker/daemon.json
 {
+  "mtu": 1450,
   "features": {"buildkit": true}
 }
 EOF
