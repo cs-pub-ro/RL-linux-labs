@@ -20,6 +20,28 @@ function @silent() {
 	fi
 }
 
+# disables docker networking autoconfiguration features altogether
+function lab_dockerNoBridge() {
+	cat <<-EOF > /tmp/docker-daemon.json
+	{
+		"mtu": 1450,
+		"exec-opts": ["native.cgroupdriver=systemd"],
+		"features": { "buildkit": true },
+		"experimental": true,
+		"cgroup-parent": "docker.slice",
+		"iptables": false,
+		"bridge": "none",
+		"ip-forward": false,
+		"ipv6": true
+	}
+	EOF
+	if ! cmp /tmp/docker-daemon.json /etc/docker/daemon.json >/dev/null 2>&1; then
+		cp -f /tmp/docker-daemon.json /etc/docker/daemon.json
+		systemctl disable --now docker.socket
+		systemctl enable docker.service
+	fi
+}
+
 function lab_runTopology() {
 	local LOG="/tmp/.containernet-stdout"
 	local GUARD_FILE="/tmp/.containernet-init"
@@ -44,7 +66,17 @@ function lab_runTopology() {
 		I="$(( "$I" + 1 ))"
 		echo "Still waiting..."
 	done
+	lab_applyMTU
 	echo "Containernet successfully started!"
+}
+
+function lab_applyMTU() {
+	@silent ip link set mtu 1450 dev veth-red
+	@silent ip link set mtu 1450 dev veth-green
+	@silent ip link set mtu 1450 dev veth-blue
+	for ct in red green blue; do
+		docker exec "mn.$ct" /bin/bash -c "ip link set mtu 1450 dev $ct-eth0"
+	done
 }
 
 function check_container() {

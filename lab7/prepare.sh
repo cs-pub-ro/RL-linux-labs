@@ -6,6 +6,13 @@ if [[ "$_RL_INTERNAL" != "rlrullz" ]]; then
 	exit
 fi
 
+if [[ "$EX" == "boot" ]]; then
+	# just start the topology
+	lab_runTopology "$LAB_SRC/topology.py"
+	exit 0
+fi
+
+lab_dockerNoBridge
 lab_cleanall
 
 lab_runTopology "$LAB_SRC/topology.py"
@@ -42,5 +49,13 @@ if [[ "$EX" == "ex6" ]]; then
 
 elif [[ "$EX" == "ex7" ]]; then
 	ex7
+
+elif [[ "$EX" == "ex9" ]]; then
+	# install the systemd service
+	cp "$SRC/$LAB/rl-topology.service" -f /etc/systemd/system/rl-topology.service
+	chmod 755 /etc/systemd/system/rl-topology.service
+	systemctl daemon-reload
+	systemctl enable rl-topology
 fi
+
 

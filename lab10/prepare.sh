@@ -6,6 +6,7 @@ if [[ "$_RL_INTERNAL" != "rlrullz" ]]; then
 	exit
 fi
 
+lab_dockerNoBridge
 lab_cleanall
 
 lab_runTopology "$LAB_SRC/topology.py"
