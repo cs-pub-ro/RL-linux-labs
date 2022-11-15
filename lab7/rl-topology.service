@@ -1,0 +1,15 @@
+[Unit]
+Description=RL Persistent Topology
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/rl-labs
+ExecStart=/opt/rl-labs/prepare.sh lab7 boot
+
+[Install]
+WantedBy=multi-user.target
+

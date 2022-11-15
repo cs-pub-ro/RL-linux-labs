@@ -16,7 +16,7 @@ function go() {
 }
 
 function rr() {
-	echo "We don't do that here!" ; exit 1
+	echo "We don't do that here!" ; return 1
 	# [ "$(docker ps | grep $1 )" ]  && docker restart mn.$1  
 	#Danger: Container will be disconnected from controller and network
 	#todo: check if there is any way to reconnect to controller and ovs
@@ -36,7 +36,7 @@ function force_stop_lab() {
 
 function stop_lab() {
 	# todo: maybe a for loop?
-	kill %$(jobs | grep -i topology.py | cut -c2) &>/dev/null || true
+	sudo kill %$(jobs | grep -i topology.py | cut -c2) &>/dev/null || true
 	force_stop_lab 
 }
 
