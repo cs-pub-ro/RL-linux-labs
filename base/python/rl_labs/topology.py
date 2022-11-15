@@ -44,8 +44,8 @@ def standard_container(net, name, options=None):
         "dimage": "rlrules/base:latest",
         "dcmd": "/lib/systemd/systemd",
         "ip": '', "network_mode": 'none',
-        # mount cgroup for systemd
-        "volumes": ["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
+        # don't mount cgroup for systemd (for cgroups v2)
+        # "volumes": ["/sys/fs/cgroup:/sys/fs/cgroup:ro"],
         "tmpfs": {"/tmp": "", "/run": "", "/run/lock": ""},
         "sysctls": {
             "net.ipv6.conf.all.disable_ipv6": "0"
