@@ -55,7 +55,8 @@ function lab_setup_ex7() {
 
 # special lab flags for persistence across reboots
 if [[ "$EX" == "--persist-boot" ]]; then
-	# no cleanups, just start the [persistent] topology
+	rl_stop_topology
+	# no cleanups, just re-start the [persistent] topology
 	rl_start_topology --exec "$LAB_SRC/topology.py" --persist
 	exit 0
 fi

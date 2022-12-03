@@ -4,7 +4,7 @@
 set -e
 
 echo "Building the base docker image..."
-docker build --network=host -f Dockerfile -t "rlrules/base" .
+docker build -q --network=host -f Dockerfile -t "rlrules/base" .
 
 echo "Done"
 
