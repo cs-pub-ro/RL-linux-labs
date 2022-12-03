@@ -1,28 +1,26 @@
 #!/bin/bash
-# Bash utility functions for rl-labs
+# Bash utility functions (& aliases) for the RL Lab VM.
+# Automatically loaded inside the student's shell.
 
 RL_LABS_HOME=${RL_LABS_HOME:-/opt/rl-labs}
 
-function smoke() {
+function rl_smoke() {
 	if [ -d "${RL_LABS_HOME}/smoke-test" ]; then
 		sudo "${RL_LABS_HOME}/smoke-test/run.sh" add
 		sudo "${RL_LABS_HOME}/smoke-test/run.sh" clean
 	fi
 }
 
-function go() {
-	#[ "$(docker ps | grep $1 )" ]  && docker exec -it mn.$1 /bin/bash -c "cd && /bin/bash" 
-	[ "$(docker ps | grep $1 )" ]  && docker exec --user student -it mn.$1 /bin/bash -c "cd && exec /bin/bash" 
+function rl_go() {
+	if [ -n "$(docker container ls -q --filter name="mn.$1")" ]; then
+		docker exec --user student -it mn.$1 /bin/bash -c "cd && exec /bin/bash" 
+	else
+		"Container '$1' is not running!" >&2
+		return 1
+	fi
 }
 
-function rr() {
-	echo "We don't do that here!" ; return 1
-	# [ "$(docker ps | grep $1 )" ]  && docker restart mn.$1  
-	#Danger: Container will be disconnected from controller and network
-	#todo: check if there is any way to reconnect to controller and ovs
-}
-
-function start_lab() {
+function rl_start_lab() {
 	if [[ -f "${RL_LABS_HOME}/.update-required" ]]; then
 		echo "Please run 'update_lab' first!" >&2
 		return 1
@@ -30,17 +28,20 @@ function start_lab() {
 	sudo "${RL_LABS_HOME}/prepare.sh" "$@"
 }
 
-function force_stop_lab() {
-	sudo mn -c -v output
+function rl_stop_lab() {
+	sudo "${RL_LABS_HOME}/prepare.sh" --stop
 }
 
-function stop_lab() {
-	# todo: maybe a for loop?
-	sudo kill %$(jobs | grep -i topology.py | cut -c2) &>/dev/null || true
-	force_stop_lab 
-}
-
-function update_lab() {
+function rl_update_lab() {
 	sudo "${RL_LABS_HOME}/update.sh" "$@"
 }
+
+if [[ $- == *i* ]]; then
+	# aliases (only for interactive shells)
+	function go() { rl_go "$@"; }
+	function start_lab() { rl_start_lab "$@"; }
+	function stop_lab() { rl_stop_lab "$@"; }
+	function restart_lab() { rl_restart_lab "$@"; }
+	function update_lab() { rl_update_lab "$@"; }
+fi
 

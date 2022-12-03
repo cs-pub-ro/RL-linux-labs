@@ -12,7 +12,22 @@ from mininet.log import setLogLevel, info
 from mininet.link import Intf, Link
 
 
-GUARD_FILE = "/tmp/.containernet-init"
+RUNTIME_DIR = "/run/rl-labs"
+NOTIFY_FILE = RUNTIME_DIR + "/.notify-started"
+# CONTAINER_NAMES_FILE = RUNTIME_DIR + "/all-containers.txt"
+
+
+class RLCustomLink(Link):
+    def __init__(self, node1, node2, **kwargs):
+        super().__init__(node1, node2, **kwargs )
+
+    def makeIntfPair(self, intfname1, intfname2, addr1=None, addr2=None,
+                     node1=None, node2=None, deleteIntfs=True):
+        super().makeIntfPair(intfname1, intfname2, addr1, addr2,
+                             node1, node2, deleteIntfs=deleteIntfs)
+        # Need to reduce the MTU of the virtual interfaces (for cloud usage)
+        node1.cmd('ip link set dev %s mtu 1450' % intfname1)
+        node2.cmd('ip link set dev %s mtu 1450' % intfname2)
 
 
 def get_controller(remote_controller=""):
@@ -28,7 +43,7 @@ def get_controller(remote_controller=""):
     
 
 def get_default_net(options=None):
-    """ """
+    """ Returns the default MiniNet network object. """
     if not options:
         options = {}
 
@@ -79,13 +94,13 @@ def standard_container(net, name, options=None):
 def link_host_container(host, container):
     intfName1 = "veth-" + container.name
     intfName2 = container.name + "-eth0"
-    return Link(host, container, intfName1=intfName1, intfName2=intfName2)
+    return RLCustomLink(host, container, intfName1=intfName1, intfName2=intfName2)
 
 
 def signal_topology_started():
     """ Writes the guard file to signal that the topoloy has been set up. """
-    with open(GUARD_FILE, "w") as f:
-        f.write("Containernet started!")
+    with open(NOTIFY_FILE, "w") as f:
+        f.write("ContainerNet started!")
 
 
 def entrypoint(main_func):
