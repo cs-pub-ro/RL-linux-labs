@@ -4,9 +4,14 @@ set -e
 
 # enable systemd services
 systemctl enable container-boot
+systemctl enable networking
 systemctl enable ssh
 systemctl enable vsftpd
 systemctl enable openbsd-inetd
+
+# configure ifupdown networking
+sed -i -E -e 's/^#?CONFIGURE_INTERFACES=.*/CONFIGURE_INTERFACES=yes/' /etc/default/networking
+sed -i -E -e 's/^#?WAIT_ONLINE_TIMEOUT=.*/WAIT_ONLINE_TIMEOUT=10/' /etc/default/networking
 
 # create student user
 useradd -m student

@@ -8,7 +8,7 @@ import time
 import signal
 
 from mininet.net import Containernet
-from mininet.node import Controller, RemoteController, OVSSwitch, Host
+from mininet.node import Controller, RemoteController, OVSSwitch, Host, Docker
 from mininet.log import setLogLevel, info, warn
 from mininet.link import Link
 
@@ -75,15 +75,24 @@ def rl_container(net, name, **options):
     STANDARD_CONTAINER_OPTIONS = {
         "red": {
             "hostname": "red",
-            "environment": {"RL_PS1_FORMAT": "\\e[0;31m\\u@\\h:\\W\\$ \\e[m"}
+            "environment": {
+                "RL_PS1_FORMAT": "\\e[0;31m\\u@\\h:\\W\\$ \\e[m",
+                "NET_WAIT_ONLINE_IFACE": "red-eth0"
+            },
         },
         "green": {
             "hostname": "green",
-            "environment": {"RL_PS1_FORMAT": "\\e[0;32m\\u@\\h:\\W\\$ \\e[m"}
+            "environment": {
+                "RL_PS1_FORMAT": "\\e[0;32m\\u@\\h:\\W\\$ \\e[m",
+                "NET_WAIT_ONLINE_IFACE": "green-eth0",
+            },
         },
         "blue": {
             "hostname": "blue",
-            "environment": {"RL_PS1_FORMAT": "\\e[0;34m\\u@\\h:\\W\\$ \\e[m"}
+            "environment": {
+                "RL_PS1_FORMAT": "\\e[0;34m\\u@\\h:\\W\\$ \\e[m",
+                "NET_WAIT_ONLINE_IFACE": "blue-eth0",
+            },
         },
     }
 

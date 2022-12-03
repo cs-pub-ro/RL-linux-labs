@@ -26,6 +26,7 @@ if [[ -z "$LAB" ]]; then _help; fi
 if [[ "$LAB" == "--force-clean" ]]; then
 	systemctl -q stop rl-topology || true
 	rl_stop_topology
+	rl_cfg_cleanall
 	exit 0
 fi
 

@@ -1,7 +1,4 @@
-FROM ubuntu:bionic
-
-LABEL maintainer="RLTeam@UPB"
-LABEL recommendedtag="rlrules/base:latest"
+FROM ubuntu:22.04
 
 # required for systemd
 ENV container docker
@@ -13,7 +10,7 @@ EXPOSE 22/tcp
 # install necessary packages
 RUN apt-get update && apt-get install -y \
 	sudo locales vim dbus nano curl wget neovim bash-completion \
-	systemd ifupdown ssh telnet rsync ftp \
+	systemd udev ifupdown ssh telnet rsync ftp \
 	net-tools iputils-ping iproute2 traceroute tcpdump dsniff \
 	dnsutils netcat vsftpd apache2 telnetd \
 	&& rm -rf /var/lib/apt/lists/*

@@ -158,7 +158,7 @@ function rl_cfg_cleanall() {
 	(
 		set +e  # ignore errors
 		# kill any leftover mininet containers
-		local MN_CONTAINERS="$(docker container ls -a -q --filter name='mn.*')"
+		local MN_CONTAINERS="$(docker ps -q -a --filter 'label=com.containernet')"
 		if [[ -n "$MN_CONTAINERS" ]]; then
 			_debug "Killing leftover containers..."
 			docker kill $MN_CONTAINERS
