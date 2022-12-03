@@ -97,6 +97,13 @@ function rl_docker_setup_nobridge() {
 function rl_start_topology() {
 	mkdir -p "$RL_RUNTIME_DIR"
 	rm -f "$RL_MN_NOTIFY_FILE"
+	if [[ "$1" == "--exec" ]]; then
+		# execute synchronously
+		shift
+		export PYTHONPATH="$SRC/base/python/"
+		exec python3 "$@"
+	fi
+	# otherwise, start in background:
 	(
 		export PYTHONPATH="$SRC/base/python/"
 		nohup python3 "$@" &>"$RL_MN_LOGFILE"
@@ -125,9 +132,25 @@ function rl_stop_topology() {
 	mn -c -v output
 }
 
+# Installs the given topology as persistent service (across reboots)
+function rl_install_persist_topo() {
+	cp "$SRC/base/rl-topology.service" -f /etc/systemd/system/rl-topology.service
+	mkdir -p "$RL_LAB_CONFIG_DIR"
+	echo "RL_LAB=$1" > "$RL_LAB_CONFIG_DIR/persist-environment"
+	chmod 755 /etc/systemd/system/rl-topology.service
+	systemctl -q daemon-reload
+	systemctl -q enable rl-topology
+	echo "Persistent rl-topology service enabled!"
+}
+
 # Checks the running status of a MiniNet container
 function rl_ct_check() {
 	[ "$( docker container inspect -f '{{.State.Running}}' "mn.$1" 2>/dev/null )" == "true" ]
+}
+
+function rl_ct_wait_for_boot() {
+	local cmd='systemctl is-system-running 2>/dev/null'
+	 "$1" 'while [[ ! "$('"$cmd"')" =~ (running|degraded) ]]; do sleep 1; done'
 }
 
 # Cleans up all networking configuration & stops/removes all MN containers

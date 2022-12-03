@@ -23,7 +23,8 @@ fi
 LAB=$1
 if [[ -z "$LAB" ]]; then _help; fi 
 
-if [[ "$LAB" == "--stop" ]]; then
+if [[ "$LAB" == "--force-clean" ]]; then
+	systemctl -q stop rl-topology || true
 	rl_stop_topology
 	exit 0
 fi

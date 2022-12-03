@@ -1,26 +1,28 @@
 from mininet.node import Host
+
 from rl_labs.topology import (
-    get_default_net, standard_container, entrypoint, link_host_container,
-    signal_topology_started
+    build_container_net, rl_container, entrypoint, link_host_container
 )
 
 
-def lab7_main(options=None):
-    net = get_default_net(options)
+def lab7_prepare(options=None):
+    net = build_container_net(options)
+
+    container_opts = {
+        "persist": options.get("persist", False),
+    }
 
     hroot = Host('host', inNamespace=False)
-    hred = standard_container(net, "red")
-    hgreen = standard_container(net, "green")
-    hblue = standard_container(net, "blue")
+    hred = rl_container(net, "red", **container_opts)
+    hgreen = rl_container(net, "green", **container_opts)
+    hblue = rl_container(net, "blue", **container_opts)
 
     link_host_container(hroot, hred)
     link_host_container(hroot, hgreen)
     link_host_container(hroot, hblue)
 
-    net.start()
-    signal_topology_started()
-    
+    return net
 
 if __name__ == '__main__':
-    entrypoint(lab7_main)
-    
+    entrypoint(lab7_prepare)
+

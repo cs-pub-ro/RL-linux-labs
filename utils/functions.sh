@@ -29,7 +29,7 @@ function rl_start_lab() {
 }
 
 function rl_stop_lab() {
-	sudo "${RL_LABS_HOME}/prepare.sh" --stop
+	sudo "${RL_LABS_HOME}/prepare.sh" --force-clean
 }
 
 function rl_update_lab() {

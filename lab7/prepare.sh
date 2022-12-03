@@ -53,20 +53,31 @@ function lab_setup_ex7() {
 	rl_ctexec "blue" ip li set down dev blue-eth0
 }
 
-lab_setup_reset
+# special lab flags for persistence across reboots
+if [[ "$EX" == "--persist-boot" ]]; then
+	# no cleanups, just start the [persistent] topology
+	rl_start_topology --exec "$LAB_SRC/topology.py" --persist
+	exit 0
+fi
+
 
 if [[ -z "$EX" || "$EX" == "ex1" ]]; then
-	true
+	lab_setup_reset
 
 elif [[ "$EX" == "ex6" ]]; then
+	lab_setup_reset
 	lab_setup_ex6
 
 elif [[ "$EX" == "ex7" ]]; then
+	lab_setup_reset
 	lab_setup_ex7
 
 elif [[ "$EX" == "ex9" ]]; then
-	# TODO: not yet working
-	# rl_install_persist_topo "lab7"
+	rl_stop_topology
+	rl_docker_setup_nobridge
+	rl_cfg_cleanall
+	rl_install_persist_topo "lab7"
+	systemctl restart rl-topology
 else
 	echo "ERROR: invalid lab argument: '$EX'" >&2
 	exit 1

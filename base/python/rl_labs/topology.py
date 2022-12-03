@@ -4,12 +4,13 @@ Base RL Lab topology definitions.
 
 import argparse
 import sys
+import time
+import signal
 
 from mininet.net import Containernet
 from mininet.node import Controller, RemoteController, OVSSwitch, Host
-from mininet.cli import CLI
-from mininet.log import setLogLevel, info
-from mininet.link import Intf, Link
+from mininet.log import setLogLevel, info, warn
+from mininet.link import Link
 
 
 RUNTIME_DIR = "/run/rl-labs"
@@ -18,6 +19,8 @@ NOTIFY_FILE = RUNTIME_DIR + "/.notify-started"
 
 
 class RLCustomLink(Link):
+    """ Custom link class with workarounds. """
+
     def __init__(self, node1, node2, **kwargs):
         super().__init__(node1, node2, **kwargs )
 
@@ -30,7 +33,7 @@ class RLCustomLink(Link):
         node2.cmd('ip link set dev %s mtu 1450' % intfname2)
 
 
-def get_controller(remote_controller=""):
+def build_controller(remote_controller=""):
     if not remote_controller:
         return Controller(name='c0', port=6633)
     else:
@@ -42,19 +45,20 @@ def get_controller(remote_controller=""):
         return RemoteController(name='c0', ip=conn_params[0], port=ctrl_port)
     
 
-def get_default_net(options=None):
-    """ Returns the default MiniNet network object. """
+def build_container_net(options=None):
+    """ Builds a ContainerNet network object. """
     if not options:
         options = {}
 
-    net = Containernet()
-    remote_controller = options.get("remote_controller", None)
-    net.addController(get_controller(remote_controller))
+    remote_controller = options.pop("remote_controller", None)
+
+    net = Containernet(waitConnected=True)
+    net.addController(build_controller(remote_controller))
 
     return net
 
 
-def standard_container(net, name, options=None):
+def rl_container(net, name, **options):
     DEFAULT_OPTIONS = {
         "dimage": "rlrules/base:latest",
         "dcmd": "/lib/systemd/systemd",
@@ -66,8 +70,9 @@ def standard_container(net, name, options=None):
             "net.ipv6.conf.all.disable_ipv6": "0"
         },
         "cap_add": ["sys_admin"],
+        "persist": False,
     }
-    CONTAINER_OPTIONS = {
+    STANDARD_CONTAINER_OPTIONS = {
         "red": {
             "hostname": "red",
             "environment": {"RL_PS1_FORMAT": "\\e[0;31m\\u@\\h:\\W\\$ \\e[m"}
@@ -82,11 +87,8 @@ def standard_container(net, name, options=None):
         },
     }
 
-    if not options:
-        options = DEFAULT_OPTIONS
-    else:
-        options = dict(DEFAULT_OPTIONS, **options)
-    options = dict(CONTAINER_OPTIONS.get(name, {}), **options)
+    options = dict(DEFAULT_OPTIONS, **options)
+    options = dict(STANDARD_CONTAINER_OPTIONS.get(name, {}), **options)
 
     return net.addDocker(name, **options)
 
@@ -103,11 +105,34 @@ def signal_topology_started():
         f.write("ContainerNet started!")
 
 
-def entrypoint(main_func):
+def entrypoint(build_func):
     setLogLevel('output')
     parser = argparse.ArgumentParser(description='Running modes')
     parser.add_argument('--remote-controller', action="store", dest="remote_controller", default='')
+    parser.add_argument('--persist', action="store_true", dest="persist")
     params = parser.parse_args(sys.argv[1:])
-    
-    main_func(vars(params))
-    
+
+    stopped = [False]
+
+    # register SIGTERM handler (when ran as systemd service)
+    def _sigterm_handler(*_):
+        warn('SIGTERM received...')
+        stopped[0] = True
+    signal.signal(signal.SIGTERM, _sigterm_handler)
+
+    net = build_func(vars(params))
+
+    net.start()
+    signal_topology_started()
+    while not stopped[0]:
+        try:
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            try:
+                warn('SIGINT received, stopping ContainerNet...')
+            except Exception:
+                # pylint: enable=broad-except
+                pass
+            break
+    net.stop()
+
