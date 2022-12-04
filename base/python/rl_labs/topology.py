@@ -26,8 +26,16 @@ class RLCustomLink(Link):
 
     def makeIntfPair(self, intfname1, intfname2, addr1=None, addr2=None,
                      node1=None, node2=None, deleteIntfs=True):
-        super().makeIntfPair(intfname1, intfname2, addr1, addr2,
+        # use temporary interface names (as they are all created on host and
+        # duplicates might exist)
+        tmpname1 = node1.name + "-" + intfname1
+        tmpname2 = node2.name + "-" + intfname2
+        super().makeIntfPair(tmpname1, tmpname2, addr1, addr2,
                              node1, node2, deleteIntfs=deleteIntfs)
+        # Rename interfaces
+        node1.cmd('ip link set name %s dev %s' % (intfname1, tmpname1))
+        node2.cmd('ip link set name %s dev %s' % (intfname2, tmpname2))
+
         # Need to reduce the MTU of the virtual interfaces (for cloud usage)
         node1.cmd('ip link set dev %s mtu 1450' % intfname1)
         node2.cmd('ip link set dev %s mtu 1450' % intfname2)
