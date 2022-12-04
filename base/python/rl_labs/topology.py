@@ -126,7 +126,7 @@ def signal_topology_started():
         f.write("ContainerNet started!")
 
 
-def entrypoint(build_func):
+def entrypoint(build_func, **entry_options):
     setLogLevel('output')
     parser = argparse.ArgumentParser(description='Running modes')
     parser.add_argument('--remote-controller', action="store", dest="remote_controller", default='')
@@ -145,6 +145,9 @@ def entrypoint(build_func):
 
     net.start()
     signal_topology_started()
+    if "post_start" in entry_options and entry_options["post_start"]:
+        entry_options["post_start"](net)
+
     while not stopped[0]:
         try:
             time.sleep(0.5)
