@@ -2,6 +2,7 @@ FROM ubuntu:22.04
 
 # required for systemd
 ENV container docker
+ENV TERM xterm-256color
 STOPSIGNAL SIGRTMIN+3
 
 # sshd

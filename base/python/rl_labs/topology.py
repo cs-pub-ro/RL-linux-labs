@@ -58,6 +58,10 @@ def build_container_net(options=None):
     return net
 
 
+def make_ps1_prompt(text_style_id):
+    return r"\[\e[" + text_style_id + r"\]\u@\h:\W\$ \[\e[m\]"
+
+
 def rl_container(net, name, **options):
     DEFAULT_OPTIONS = {
         "dimage": "rlrules/base:latest",
@@ -76,21 +80,21 @@ def rl_container(net, name, **options):
         "red": {
             "hostname": "red",
             "environment": {
-                "RL_PS1_FORMAT": "\\e[0;31m\\u@\\h:\\W\\$ \\e[m",
+                "RL_PS1_FORMAT": make_ps1_prompt("0;31m"),
                 "NET_WAIT_ONLINE_IFACE": "red-eth0"
             },
         },
         "green": {
             "hostname": "green",
             "environment": {
-                "RL_PS1_FORMAT": "\\e[0;32m\\u@\\h:\\W\\$ \\e[m",
+                "RL_PS1_FORMAT": make_ps1_prompt("0;32m"),
                 "NET_WAIT_ONLINE_IFACE": "green-eth0",
             },
         },
         "blue": {
             "hostname": "blue",
             "environment": {
-                "RL_PS1_FORMAT": "\\e[0;34m\\u@\\h:\\W\\$ \\e[m",
+                "RL_PS1_FORMAT": make_ps1_prompt("0;34m"),
                 "NET_WAIT_ONLINE_IFACE": "blue-eth0",
             },
         },
