@@ -2,12 +2,12 @@
 # Bash utility functions (& aliases) for the RL Lab VM.
 # Automatically loaded inside the student's shell.
 
-RL_LABS_HOME=${RL_LABS_HOME:-/opt/rl-labs}
+RL_SCRIPTS_SRC=${RL_SCRIPTS_SRC:-/opt/rl-labs}
 
 function rl_smoke() {
-	if [ -d "${RL_LABS_HOME}/smoke-test" ]; then
-		sudo "${RL_LABS_HOME}/smoke-test/run.sh" add
-		sudo "${RL_LABS_HOME}/smoke-test/run.sh" clean
+	if [ -d "${RL_SCRIPTS_SRC}/smoke-test" ]; then
+		sudo "${RL_SCRIPTS_SRC}/smoke-test/run.sh" add
+		sudo "${RL_SCRIPTS_SRC}/smoke-test/run.sh" clean
 	fi
 }
 
@@ -21,19 +21,19 @@ function rl_go() {
 }
 
 function rl_start_lab() {
-	if [[ -f "${RL_LABS_HOME}/.update-required" ]]; then
+	if [[ -f "${RL_SCRIPTS_SRC}/.update-required" ]]; then
 		echo "Please run 'update_lab' first!" >&2
 		return 1
 	fi
-	sudo "${RL_LABS_HOME}/prepare.sh" "$@"
+	sudo "${RL_SCRIPTS_SRC}/prepare.sh" "$@"
 }
 
 function rl_stop_lab() {
-	sudo "${RL_LABS_HOME}/prepare.sh" --force-clean
+	sudo "${RL_SCRIPTS_SRC}/prepare.sh" --force-clean
 }
 
 function rl_update_lab() {
-	sudo "${RL_LABS_HOME}/update.sh" "$@"
+	sudo "${RL_SCRIPTS_SRC}/update.sh" "$@"
 }
 
 if [[ $- == *i* ]]; then

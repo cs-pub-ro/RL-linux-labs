@@ -6,7 +6,7 @@ if [[ "$_RL_INTERNAL" != "rlrullz" ]]; then
 	exit 1
 fi
 
-. "$SRC/utils/functions.sh"
+. "$RL_SCRIPTS_SRC/utils/functions.sh"
 
 RL_LAB_CONFIG_DIR="/etc/rl-labs"
 RL_RUNTIME_DIR="/run/rl-labs"
@@ -100,12 +100,12 @@ function rl_start_topology() {
 	if [[ "$1" == "--exec" ]]; then
 		# execute synchronously
 		shift
-		export PYTHONPATH="$SRC/base/python/"
+		export PYTHONPATH="$RL_SCRIPTS_SRC/base/python/"
 		exec python3 "$@"
 	fi
 	# otherwise, start in background:
 	(
-		export PYTHONPATH="$SRC/base/python/"
+		export PYTHONPATH="$RL_SCRIPTS_SRC/base/python/"
 		nohup python3 "$@" &>"$RL_MN_LOGFILE"
 	)&
 	local SCRIPT_PID=$!
@@ -134,7 +134,7 @@ function rl_stop_topology() {
 
 # Installs the given topology as persistent service (across reboots)
 function rl_install_persist_topo() {
-	cp "$SRC/base/rl-topology.service" -f /etc/systemd/system/rl-topology.service
+	cp "$RL_SCRIPTS_SRC/base/rl-topology.service" -f /etc/systemd/system/rl-topology.service
 	mkdir -p "$RL_LAB_CONFIG_DIR"
 	echo "RL_LAB=$1" > "$RL_LAB_CONFIG_DIR/persist-environment"
 	chmod 755 /etc/systemd/system/rl-topology.service

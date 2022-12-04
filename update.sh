@@ -1,7 +1,7 @@
 #!/bin/bash
 # RL Labs update script
 
-export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+export RL_SCRIPTS_SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 
 set -e
 if [ "$EUID" -ne 0 ]; then
@@ -10,7 +10,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 (
-	cd "$SRC"
+	cd "$RL_SCRIPTS_SRC"
 	remote=update
 	remote_branch=update/master
 
@@ -37,11 +37,11 @@ fi
 # run post-update hook
 (
 	_RL_INTERNAL="rlrullz"
-	export SRC
-	. "$SRC/_post-update.sh"
+	export RL_SCRIPTS_SRC
+	. "$RL_SCRIPTS_SRC/_post-update.sh"
 )
 
-rm -f "${SRC}/.update-required"
+rm -f "${RL_SCRIPTS_SRC}/.update-required"
 
 echo "Lab scripts updated successfully!"
 

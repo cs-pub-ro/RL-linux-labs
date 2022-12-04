@@ -2,7 +2,7 @@
 # RL Labs prepare script
 
 set -e
-export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+export RL_SCRIPTS_SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 _RL_INTERNAL="rlrullz"
 
 function _help() {
@@ -18,7 +18,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # load the common prepare routines
-. "$SRC/base/prepare_common.sh"
+. "$RL_SCRIPTS_SRC/base/prepare_common.sh"
 
 LAB=$1
 if [[ -z "$LAB" ]]; then _help; fi 
@@ -30,7 +30,7 @@ if [[ "$LAB" == "--force-clean" ]]; then
 	exit 0
 fi
 
-LAB_SRC="$SRC/$LAB"
+LAB_SRC="$RL_SCRIPTS_SRC/$LAB"
 if [[ ! -f "$LAB_SRC/prepare.sh" ]]; then
 	echo "Invalid argument: $LAB" >&2
 	exit 2
@@ -40,5 +40,5 @@ EX=$2
 _RL_INTERNAL="rlrullz"  # we are legit, baby
 
 # then run the lab's prepare script
-. "$SRC/$LAB/prepare.sh"
+. "$RL_SCRIPTS_SRC/$LAB/prepare.sh"
 

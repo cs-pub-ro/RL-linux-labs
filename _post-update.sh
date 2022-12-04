@@ -9,7 +9,7 @@ fi
 BUILD_MODULES=(base lab7 lab8 lab9 lab10 lab11)
 for module in "${BUILD_MODULES[@]}"; do
 	# build docker images
-	cd "$SRC/$module/"
+	cd "$RL_SCRIPTS_SRC/$module/"
 	./build.sh
 done
 
