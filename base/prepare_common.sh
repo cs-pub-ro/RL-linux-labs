@@ -35,19 +35,15 @@ function rl_ctexec() {
 	# parse cmdline args
 	local USE_SHELL=
 	local -a DOCKER_ARGS=()
-	local OPTS=$(getopt -a -n rl_ctexec --options 's,-i' \
-			--long 'shell,stdin' -- "$@")
-	eval set -- "$OPTS"
-	while : ; do
+	while [[ "$#" -gt 0 ]]; do
 		case "$1" in
 			-s | --shell )
 				USE_SHELL="1" ;;
 			-i | --stdin )
 				DOCKER_ARGS+=("-i") ;;
-			--)
-				shift; break ;;
-			*)
-				echo "Unexpected option: $1" ;;
+			-*)
+				echo "Unexpected option: $1"; return 1 ;;
+			*) break ;;
 		esac; shift;
 	done
 	local CT="$1"; shift
