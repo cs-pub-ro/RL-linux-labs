@@ -44,12 +44,20 @@ if [[ "$DO_FETCH" == "1" ]]; then
 	if [[ "$FORCE" == "1" ]]; then
 		git reset --hard
 	fi
-	if git merge-base --is-ancestor HEAD $remote_branch; then
+	if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$BRANCH" ]]; then
+		if git rev-parse --verify "$BRANCH" &>/dev/null; then
+			git checkout "$BRANCH"
+		else
+			git checkout -b "$BRANCH" "$remote_branch"
+			exit 0
+		fi
+	fi
+	if git merge-base --is-ancestor HEAD "$remote_branch"; then
 		echo 'Fast-forward possible. Merging...'
-		git merge --ff-only --stat $remote_branch
+		git merge --ff-only --stat "$remote_branch"
 	else
-		echo 'Fast-forward not possible. Rebasing...'
-		git rebase --preserve-merges --stat $remote_branch
+		echo 'Fast-forward not possible. Resetting...'
+		git reset --hard "$remote_branch"
 	fi
 )
 fi
