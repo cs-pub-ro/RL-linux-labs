@@ -9,20 +9,39 @@ if [ "$EUID" -ne 0 ]; then
 	exit
 fi
 
+DO_FETCH=1
+FORCE=
+BRANCH=master
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--no-fetch)
+			DO_FETCH=0 ;;
+		--force)
+			FORCE=1 ;;
+		--branch)
+			BRANCH="$2"; shift ;;
+		*)
+			echo "Invalid argument: $1" >&2
+			exit 1 ;;
+	esac
+	shift
+done
+
+if [[ "$DO_FETCH" == "1" ]]; then
 (
 	cd "$RL_SCRIPTS_SRC"
 	remote=update
-	remote_branch=update/master
+	remote_branch=update/$BRANCH
 
 	echo "Fetching from $remote..."
-	git fetch $remote
+	git fetch "$remote"
 
 	if git merge-base --is-ancestor $remote_branch HEAD; then
 		echo 'Already up-to-date'
 		exit 0
 	fi
 
-	if [[ "$1" == "--force" ]]; then
+	if [[ "$FORCE" == "1" ]]; then
 		git reset --hard
 	fi
 	if git merge-base --is-ancestor HEAD $remote_branch; then
@@ -33,6 +52,7 @@ fi
 		git rebase --preserve-merges --stat $remote_branch
 	fi
 )
+fi
 
 # run post-update hook
 (
