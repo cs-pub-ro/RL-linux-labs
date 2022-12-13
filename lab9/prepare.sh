@@ -31,7 +31,9 @@ function lab_setup_reset() {
 	rl_cfg_set_ipv4
 	rl_cfg_set_ifstate up
 	rl_cfg_set_hosts
-	rl_cfg_internet_connectivity
+	rl_cfg_set_ct_routes
+	rl_cfg_set_ct_resolv
+	rl_cfg_set_ip_forward
 	rl_ssh_provision_keys --users student,host
 }
 
