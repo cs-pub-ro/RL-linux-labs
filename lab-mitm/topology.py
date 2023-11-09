@@ -5,7 +5,7 @@ from rl_labs.topology import (
 )
 
 
-def lab11_prepare(options=None):
+def lab_prepare(options=None):
     net = build_container_net(options)
 
     container_opts = {
@@ -25,5 +25,5 @@ def lab11_prepare(options=None):
     return net
 
 if __name__ == '__main__':
-    entrypoint(lab11_prepare)
+    entrypoint(lab_prepare)
 

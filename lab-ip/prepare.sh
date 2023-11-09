@@ -77,7 +77,7 @@ elif [[ "$EX" == "ex9" ]]; then
 	rl_stop_topology
 	rl_docker_setup_nobridge
 	rl_cfg_cleanall
-	rl_install_persist_topo "lab7"
+	rl_install_persist_topo "lab-ip"
 	systemctl restart rl-topology
 else
 	echo "ERROR: invalid lab argument: '$EX'" >&2
