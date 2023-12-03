@@ -11,7 +11,7 @@ EXPOSE 22/tcp
 # install necessary packages
 RUN apt-get update && apt-get install -y \
 	sudo locales vim dbus nano curl wget neovim bash-completion \
-	systemd udev ifupdown ssh telnet rsync ftp \
+	systemd udev ifupdown-ng ssh telnet rsync ftp \
 	net-tools iputils-ping iproute2 traceroute tcpdump dsniff \
 	dnsutils netcat vsftpd apache2 telnetd \
 	&& rm -rf /var/lib/apt/lists/*
