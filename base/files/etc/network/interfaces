@@ -1,0 +1,14 @@
+# Persistent network interfaces (ifupdown-ng)
+# RTFM: https://github.com/ifupdown-ng/ifupdown-ng/blob/main/doc/interfaces.scd
+
+# The loopback network interface
+auto lo
+
+# The primary network interface
+auto eth0
+iface eth0
+	use dhcp
+
+# Load everything inside interfaces.d subdirectory (recommended)
+source-directory /etc/network/interfaces.d/
+
