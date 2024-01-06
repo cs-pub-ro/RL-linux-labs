@@ -14,10 +14,11 @@ HOSTS_CONFIG=$(sed -e 's/^127\.0\.0\.1\s.*/127.0.0.1 localhost '"$(hostname)"'/'
 if [[ -n "$HOSTS_CONFIG" ]]; then echo -n "$HOSTS_CONFIG" >/etc/hosts; fi
 
 # workaround: wait for interface to appear
+NET_WAIT_TIMEOUT=${NET_WAIT_TIMEOUT:-15}
 NET_WAIT_EXTRA_DELAY=${NET_WAIT_EXTRA_DELAY:-4}
 if [[ -n "$NET_WAIT_ONLINE_IFACE" ]]; then
 	sed -i -E -e 's/^#?WAIT_ONLINE_IFACE=.*/WAIT_ONLINE_IFACE='"$NET_WAIT_ONLINE_IFACE"'/' /etc/default/networking
-	wait_s=10
+	wait_s=$NET_WAIT_TIMEOUT
 	while : ; do
 		ALL_OK=1
 		for iface in $NET_WAIT_ONLINE_IFACE; do
