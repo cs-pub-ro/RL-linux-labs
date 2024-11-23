@@ -77,6 +77,7 @@ function rl_docker_setup_nobridge() {
 		"experimental": true,
 		"cgroup-parent": "docker.slice",
 		"iptables": false,
+		"ip6tables": false,
 		"bridge": "none",
 		"ip-forward": false,
 		"ipv6": true
@@ -170,6 +171,15 @@ function rl_cfg_cleanall() {
 		iptables -t mangle -F
 		iptables -F
 		iptables -X
+
+		_debug "reset: ip6tables"
+		ip6tables -P INPUT ACCEPT
+		ip6tables -P FORWARD ACCEPT
+		ip6tables -P OUTPUT ACCEPT
+		ip6tables -t nat -F
+		ip6tables -t mangle -F
+		ip6tables -F
+		ip6tables -X
 
 		_debug "reset: sysctl"
 		@silent sysctl -w net.ipv4.ip_forward=0
