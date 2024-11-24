@@ -6,6 +6,7 @@ import argparse
 import sys
 import time
 import signal
+import uuid
 
 from mininet.net import Containernet
 from mininet.node import Controller, RemoteController, OVSSwitch, Host, Docker
@@ -26,14 +27,12 @@ class RLCustomLink(Link):
 
     def makeIntfPair(self, intfname1, intfname2, addr1=None, addr2=None,
                      node1=None, node2=None, deleteIntfs=True):
-        # use temporary interface names (as they are all created on host and
-        # duplicates might exist)
-        tmpname1 = intfname1
-        if node1.name not in intfname1:
-            tmpname1 = node1.name + "-" + intfname1
-        tmpname2 = intfname1
-        if node2.name not in intfname2:
-            tmpname2 = node2.name + "-" + intfname2
+        # use temporary interface names (as they are all created on host)
+        tmpname1 = "tmp1" + uuid.uuid4().hex[:8].lower()
+        tmpname2 = "tmp2" + uuid.uuid4().hex[:8].lower()
+        while tmpname1 == tmpname2:
+            tmpname2 = "tmp2" + uuid.uuid4().hex[:8].lower()
+
         super().makeIntfPair(tmpname1, tmpname2, addr1, addr2,
                              node1, node2, deleteIntfs=deleteIntfs)
         # Rename interfaces
