@@ -22,7 +22,10 @@ usermod --shell /bin/bash root
 usermod -aG sudo student
 echo "student ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/student
 
-# customize user bashrc
+# customize user home & bashrc
+rsync --chown=student:student /home/.container-tweaks/bashrc /home/student/.bashrc
+rsync --chown=root:root /home/.container-tweaks/bashrc /root/.bashrc
+
 echo "export PS1=\"\${RL_PS1_FORMAT}\"" >> /root/.bashrc
 echo "export PS1=\"\${RL_PS1_FORMAT}\"" >> /home/student/.bashrc
 

@@ -35,6 +35,7 @@ RUN find /etc/systemd/system \
 # create users and generate passwords
 COPY files/bin/ /usr/local/bin/
 COPY files/etc/ /etc/
+COPY files/home/ /home/.container-tweaks/
 RUN chmod +x /usr/local/bin/*.sh && /usr/local/bin/prepare-image.sh
 
 CMD ["/lib/systemd/systemd"]
