@@ -29,6 +29,7 @@ RUN find /etc/systemd/system \
 	-not -name '*journald*' \
 	-not -name '*systemd-tmpfiles*' \
 	-not -name '*systemd-user-sessions*' \
+	-not -name '*systemd-sysctl*' \
 	-exec rm \{} \; && \
 	systemctl set-default multi-user.target
 
