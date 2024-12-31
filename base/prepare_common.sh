@@ -158,8 +158,8 @@ function rl_cfg_cleanall() {
 		local MN_CONTAINERS="$(docker ps -q -a --filter 'label=com.containernet')"
 		if [[ -n "$MN_CONTAINERS" ]]; then
 			_debug "Killing leftover containers..."
-			docker kill $MN_CONTAINERS
-			docker container rm --force $MN_CONTAINERS
+			@silent docker kill $MN_CONTAINERS
+			@silent docker container rm --force $MN_CONTAINERS
 			_debug "reset: kill $MN_CONTAINERS"
 		fi
 
