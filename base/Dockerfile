@@ -10,7 +10,8 @@ EXPOSE 22/tcp
 
 # install necessary packages
 RUN apt-get update && apt-get install -y \
-	sudo locales vim dbus nano curl wget neovim bash-completion \
+	sudo locales vim-nox dbus nano curl wget neovim bash-completion \
+	tree zsh less zip git lsof unrar moreutils expect mc htop sysstat \
 	systemd udev ifupdown-ng ssh telnet rsync ftp \
 	net-tools iputils-ping iproute2 traceroute tcpdump dsniff \
 	dnsutils netcat vsftpd apache2 telnetd \
