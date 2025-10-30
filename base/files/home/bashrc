@@ -23,7 +23,7 @@ HISTFILESIZE=2000
 # Use standard ISO 8601 timestamp: %Y-%m-%d %H:%M:%S
 HISTTIMEFORMAT='%F %T '
 # Append each history line after each executed command
-PROMPT_COMMAND='history -a'
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Enable incremental history search with up/down arrows
 bind '"\e[A": history-search-backward'
