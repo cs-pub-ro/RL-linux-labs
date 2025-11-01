@@ -3,8 +3,11 @@
 
 set -e
 
+DOCKER_ARGS=(--network=host)
+[[ "$DEBUG" == "1" ]] || DOCKER_ARGS+=(-q)
+
 echo "Building the lab-mitm docker image..."
-docker build -q --network=host -f Dockerfile -t "rlrules/lab-mitm" .
+docker build "${DOCKER_ARGS[@]}" -f Dockerfile -t "rlrules/lab-mitm" .
 
 echo "Done"
 
