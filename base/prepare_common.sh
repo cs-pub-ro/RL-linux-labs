@@ -13,6 +13,10 @@ RL_RUNTIME_DIR="/run/rl-labs"
 RL_MN_LOGFILE="/var/log/rl-labs.log"
 RL_MN_NOTIFY_FILE="${RL_RUNTIME_DIR}/.notify-started"
 
+MN_PYTHON="python3"
+if command -v mn_python >/dev/null 2>&1; then
+	MN_PYTHON="mn_python"
+fi
 
 # utility debug printing functions
 function _debug() {
@@ -98,12 +102,12 @@ function rl_start_topology() {
 		# execute synchronously
 		shift
 		export PYTHONPATH="$RL_SCRIPTS_SRC/base/python/"
-		exec python3 "$@"
+		exec "$MN_PYTHON" "$@"
 	fi
 	# otherwise, start in background:
 	(
 		export PYTHONPATH="$RL_SCRIPTS_SRC/base/python/"
-		nohup python3 "$@" &>"$RL_MN_LOGFILE"
+		nohup "$MN_PYTHON" "$@" &>"$RL_MN_LOGFILE"
 	)&
 	local SCRIPT_PID=$!
 	(
