@@ -333,16 +333,20 @@ function rl_cfg_internet_connectivity() {
 # Safety routine for doing an initial backup of host's authorized_keys (as
 # provisioned by cloud-init)
 function rl_ssh_host_backup_authkeys() {
+	local AUTHKEYS="/home/student/.ssh/authorized_keys"
 	if [[ ! -f "$RL_LAB_CONFIG_DIR/authorized_keys_backup" ]]; then
 		mkdir -p "$RL_LAB_CONFIG_DIR"
-		cp -f "/home/student/.ssh/authorized_keys" "$RL_LAB_CONFIG_DIR/authorized_keys_backup"
+		if [[ -f "$AUTHKEYS" ]]; then
+			cp -f "$AUTHKEYS" "$RL_LAB_CONFIG_DIR/authorized_keys_backup"
+		else
+			touch "$RL_LAB_CONFIG_DIR/authorized_keys_backup"
+		fi
 	fi
 }
 
 # Ensures that the VM's authorized_keys have the original provisioned keys
 # + correct permissions / ownership
 function rl_ssh_host_check_fix_authkeys() {
-	local AUTHKEYS="/home/student/.ssh/authorized_keys"
 	if [[ ! -f "$RL_LAB_CONFIG_DIR/authorized_keys_backup" ]]; then
 		echo "CRITICAL BUG: Original authorized_keys were not backed up!" >&2
 		exit 1
