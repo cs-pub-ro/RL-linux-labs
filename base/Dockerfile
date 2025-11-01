@@ -1,8 +1,7 @@
 FROM ubuntu:22.04
 
 # required for systemd
-ENV container docker
-ENV TERM xterm-256color
+ENV container=docker TERM=xterm-256color DEBIAN_FRONTEND=noninteractive
 STOPSIGNAL SIGRTMIN+3
 
 # sshd
