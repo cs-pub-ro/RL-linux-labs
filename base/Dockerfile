@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM debian:13
 
 # required for systemd
 ENV container=docker TERM=xterm-256color DEBIAN_FRONTEND=noninteractive
@@ -9,11 +9,13 @@ EXPOSE 22/tcp
 
 # install necessary packages
 RUN apt-get update && apt-get install -y \
-	sudo locales vim-nox dbus nano curl wget neovim bash-completion \
-	tree zsh less zip git lsof unrar moreutils expect mc htop sysstat \
-	systemd udev ifupdown-ng ssh telnet rsync ftp \
-	net-tools iputils-ping iproute2 traceroute tcpdump dsniff \
-	dnsutils netcat vsftpd apache2 telnetd \
+		sudo locales vim-nox dbus nano curl wget neovim bash-completion \
+		tree zsh less zip git lsof moreutils expect mc htop sysstat \
+		systemd udev ssh telnet rsync ftp openbsd-inetd \
+		net-tools iputils-ping iproute2 traceroute tcpdump dsniff \
+		dnsutils netcat-openbsd vsftpd apache2 telnetd \
+	&& apt-get install -y --no-install-recommends \
+		ifupdown-ng ifupdown-ng-compat isc-dhcp-client \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Set the locale
