@@ -94,8 +94,8 @@ function rl_docker_setup_nobridge() {
 		systemctl -q restart docker
 		# also remove iptables persistent files (if any)
 		rm -f /etc/iptables/rules.v4 /etc/iptables/rules.v6
-		iptables -F
-		iptables -X
+		iptables -F; iptables -t nat -F
+		iptables -X; iptables -t nat -F
 	fi
 }
 
@@ -175,19 +175,15 @@ function rl_cfg_cleanall() {
 		iptables -P INPUT ACCEPT
 		iptables -P FORWARD ACCEPT
 		iptables -P OUTPUT ACCEPT
-		iptables -t nat -F
-		iptables -t mangle -F
-		iptables -F
-		iptables -X
+		iptables -F; iptables -t nat -F; iptables -t mangle -F
+		iptables -X; iptables -t nat -X; iptables -t mangle -X
 
 		_debug "reset: ip6tables"
 		ip6tables -P INPUT ACCEPT
 		ip6tables -P FORWARD ACCEPT
 		ip6tables -P OUTPUT ACCEPT
-		ip6tables -t nat -F
-		ip6tables -t mangle -F
-		ip6tables -F
-		ip6tables -X
+		ip6tables -F; ip6tables -t nat -F; ip6tables -t mangle -F
+		ip6tables -X; ip6tables -t nat -X; ip6tables -t mangle -X
 
 		_debug "reset: sysctl"
 		@silent sysctl -w net.ipv4.ip_forward=0
