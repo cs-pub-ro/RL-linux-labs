@@ -92,6 +92,10 @@ function rl_docker_setup_nobridge() {
 		systemctl -q disable --now docker.socket
 		systemctl -q enable docker.service
 		systemctl -q restart docker
+		# also remove iptables persistent files (if any)
+		rm -f /etc/iptables/rules.v4 /etc/iptables/rules.v6
+		iptables -F
+		iptables -X
 	fi
 }
 
