@@ -27,7 +27,7 @@ if [[ -n "$NET_WAIT_ONLINE_IFACE" ]]; then
 	while : ; do
 		ALL_OK=1
 		for iface in $NET_WAIT_ONLINE_IFACE; do
-			if [[ ! -e "/sys/class/net/$iface" && "$(cat "/sys/class/net/$iface/operstate")" != "up" ]]; then
+			if [[ ! -e "/sys/class/net/$iface" || "$(cat "/sys/class/net/$iface/operstate" 2>/dev/null)" != "up" ]]; then
 				ALL_OK=
 			fi
 		done
