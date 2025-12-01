@@ -133,7 +133,7 @@ function rl_start_topology() {
 }
 
 function rl_stop_topology() {
-	kill %$(jobs | grep -i topology.py | cut -c2) &>/dev/null || true
+	pkill -f "topology.py" &>/dev/null || true
 	mn -c -v output
 }
 
