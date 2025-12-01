@@ -2,14 +2,21 @@
 # Runs at container boot time
 
 # export container's environment variables to file
-xargs -0 bash -c 'printf "%q\n" "$@"' -- < /proc/1/environ | \
+tr '\0' '\n' < /proc/1/environ | \
 	grep -Ev '^(PATH|DEBIAN_FRONTEND|HOME)=' > /etc/environment
 # import those environment variables
-set -a
-source /etc/environment
-set +a
+while IFS= read -r line; do
+	[ -z "$line" ] && continue
+	export "${line?}"
+	# also produce systemd-compatible EnvironmentFile
+	key="${line%%=*}"
+	val="${line#*=}"
+	val_esc="${val//\\/\\\\}"  # replace slashes
+	val_esc="${val_esc//\"/\\\"}" # replace quotes
+	printf '%s="%s"\n' "$key" "$val_esc" >> /etc/systemd/container.env
+done < /etc/environment
 
-# save RL_PS1_FORMAT to profile
+# also save RL_PS1_FORMAT to profile
 printf "RL_PS1_FORMAT=\"%s\"\n" "$RL_PS1_FORMAT" > /etc/profile.d/rl.sh
 
 sysctl -w net.ipv6.conf.all.disable_ipv6=0
