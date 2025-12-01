@@ -1,8 +1,13 @@
 #!/bin/bash
 # Runs at container boot time
 
-# import container's environment variables from systemd
-. <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/1/environ)
+# export container's environment variables to file
+xargs -0 bash -c 'printf "%q\n" "$@"' -- < /proc/1/environ | \
+	grep -Ev '^(PATH|DEBIAN_FRONTEND|HOME)=' > /etc/environment
+# import those environment variables
+set -a
+source /etc/environment
+set +a
 
 # save RL_PS1_FORMAT to profile
 printf "RL_PS1_FORMAT=\"%s\"\n" "$RL_PS1_FORMAT" > /etc/profile.d/rl.sh
