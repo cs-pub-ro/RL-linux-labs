@@ -9,6 +9,7 @@ def lab_prepare(options=None):
     net = build_container_net(options)
 
     container_opts = {
+        "dimage": "rlrules/lab-mitm:latest",
         "persist": options.get("persist", False),
         "cap_add": ["CAP_NET_RAW"],
     }

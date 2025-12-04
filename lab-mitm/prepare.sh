@@ -19,22 +19,6 @@ RL_CFG_CT_DEFAULT_ROUTE="192.168.0.100"
 RL_CFG_DNS="8.8.8.8"
 
 
-function lab_install_tools(){
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update && apt-get install -y elinks whois nmap
-
-	rl_ctexec --shell red - <<-ENDBASHSCRIPT
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update && apt-get install -y apache2
-	systemctl restart apache2
-	ENDBASHSCRIPT
-	rl_ctexec --shell green - <<-ENDBASHSCRIPT
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update && apt-get install -y elinks python3 python3-pip
-	pip3 install slowloris || true
-	ENDBASHSCRIPT
-}
-
 function lab_prepare_mitm(){
 	# local network topology
 	ip link add name mitm-bridge type bridge || true
@@ -66,7 +50,6 @@ function lab_setup_reset() {
 lab_prepare_mitm
 lab_setup_reset
 lab_setup_mitm
-lab_install_tools
 
 if [[ -z "$EX" || "$EX" == "ex1" ]]; then
 	true
