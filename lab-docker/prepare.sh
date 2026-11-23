@@ -9,7 +9,10 @@ fi
 cat << EOF > /etc/docker/daemon.json
 {
   "mtu": 1450,
-  "features": {"buildkit": true}
+  "features": {"buildkit": true},
+  "default-address-pools": [
+    { "base": "10.226.0.0/12", "size": 24 }
+  ]
 }
 EOF
 systemctl restart docker

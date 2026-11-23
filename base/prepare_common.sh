@@ -78,6 +78,9 @@ function rl_docker_setup_nobridge() {
 		"mtu": 1450,
 		"exec-opts": ["native.cgroupdriver=systemd"],
 		"features": { "buildkit": true },
+  		"default-address-pools": [
+    		{ "base": "10.226.0.0/12", "size": 24 }
+  		],
 		"experimental": true,
 		"cgroup-parent": "docker.slice",
 		"iptables": false,
